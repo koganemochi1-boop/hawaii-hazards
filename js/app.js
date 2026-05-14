@@ -130,6 +130,37 @@ function wireGlobalUiControls() {
     document.getElementById('info-modal').classList.remove('hidden');
   });
 
+  // Locate me — geolocate and fly to the user's position
+  document.getElementById('btn-locate').addEventListener('click', () => {
+    if (!navigator.geolocation) {
+      toast('Geolocation is not supported by this browser');
+      return;
+    }
+    toast('Getting your location…');
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { longitude, latitude } = pos.coords;
+        // If the user is outside Hawaiʻi, fly to the islands instead with a note
+        const inBounds = longitude > -161 && longitude < -154 && latitude > 18.5 && latitude < 22.7;
+        if (!inBounds) {
+          map.fitBounds(HAWAII_BOUNDS, { padding: 30, duration: 800 });
+          toast(`Your location (${latitude.toFixed(2)}°, ${longitude.toFixed(2)}°) is outside Hawaiʻi`);
+          return;
+        }
+        map.flyTo({ center: [longitude, latitude], zoom: 14, duration: 800 });
+        clearGeocoderMarker();
+        new maplibregl.Marker({ color: '#0a6cc1' })
+          .setLngLat([longitude, latitude])
+          .setPopup(new maplibregl.Popup().setText('Your location'))
+          .addTo(map);
+      },
+      (err) => {
+        toast(`Geolocation failed: ${err.message}`);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  });
+
   // Share button — write current hash state then copy URL
   document.getElementById('btn-share').addEventListener('click', async () => {
     writeHashState(map, layerManager);
@@ -191,14 +222,19 @@ function renderLayerList() {
   const container = document.getElementById('layer-list');
   container.innerHTML = HAZARDS.map(h => {
     const swatchColor = previewColor(h);
+    const initialOpacity = Math.round((h.fillOpacity ?? 0.4) * 100);
     return `
-      <label class="layer-item">
-        <input type="checkbox" data-hazard="${h.id}" />
-        <span class="layer-swatch" style="background:${swatchColor}"></span>
-        <span class="layer-name">${escapeHtml(h.name)}</span>
-        <span class="layer-count" data-layer-count="${h.id}"></span>
-        <span class="layer-loading" data-layer-loading="${h.id}"></span>
-      </label>
+      <div class="layer-item-wrap">
+        <label class="layer-item">
+          <input type="checkbox" data-hazard="${h.id}" />
+          <span class="layer-swatch" style="background:${swatchColor}"></span>
+          <span class="layer-name">${escapeHtml(h.name)}</span>
+          <span class="layer-count" data-layer-count="${h.id}"></span>
+          <span class="layer-loading" data-layer-loading="${h.id}"></span>
+        </label>
+        <input type="range" min="10" max="100" value="${initialOpacity}" step="5"
+               data-opacity="${h.id}" class="opacity-slider" title="Layer opacity" />
+      </div>
     `;
   }).join('');
 
@@ -206,6 +242,15 @@ function renderLayerList() {
     cb.addEventListener('change', async () => {
       const id = cb.dataset.hazard;
       await layerManager.toggle(id, cb.checked);
+    });
+  });
+
+  container.querySelectorAll('input.opacity-slider').forEach(slider => {
+    slider.addEventListener('input', () => {
+      const id = slider.dataset.opacity;
+      const opacity = parseInt(slider.value, 10) / 100;
+      const fillLayer = map.getLayer(`${id}-fill`);
+      if (fillLayer) map.setPaintProperty(`${id}-fill`, 'fill-opacity', opacity);
     });
   });
 }
