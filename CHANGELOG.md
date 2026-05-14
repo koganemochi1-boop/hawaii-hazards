@@ -7,29 +7,48 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ---
 
-## [Unreleased]
+## [Unreleased] — v2.0.0 (synthesis report) in progress
 
-Versioning discipline established. Next planned milestone is **v2.0.0** —
-a pivot from "GIS viewer" (v1) to a **synthesis report** product. The
-v1 codebase is preserved for return / standalone use; v2 work will
-happen on a dedicated `v2-synthesis-report` branch cut from `main`.
+Working branch: `v2-synthesis-report` (cut from `main` at commit
+`98b0c08`). All v2 work happens here; merges to `main` only on
+completed phases.
 
-### Planned for v2.0.0
-- New product direction: a synthesis report (specifics TBD by the user
-  in the next session).
-- Branch `v2-synthesis-report` to be created from `main` once v1.0.0 is
-  tagged.
+### Direction
+v1 was a GIS viewer for technical users. v2 reframes the product as a
+**risk-communication and preparedness tool for everyday Hawaiʻi
+residents**: enter one address, get one consolidated plain-language
+risk summary + a prioritized, deduplicated preparedness action plan.
+The map demotes to a supporting visual.
+
+### Approved scope decisions for v2.0.0
+1. **Hazard scope** — same five as v1 (tsunami, FEMA flood, wildfire,
+   SLR + coastal flood as the hurricane-surge proxy, lava). Additional
+   hazards land in v2.1+.
+2. **Pilot scope** — statewide data coverage; user-test on Oʻahu first.
+3. **Content review** — HI-EMA outreach + Red Cross Hawaiʻi partner
+   sign-off required before public launch.
+4. **Severity rubric** — Low / Moderate / High plus None. Technical
+   zone codes preserved in expanded view.
+5. **Overall risk** — max severity across hazards. No weighted aggregate.
+6. **Action plan caps per horizon** — 4 Right Now, 6 This Week, 8 This
+   Month / Ongoing.
+7. **Print/PDF** — 2-page letter-portrait. Page 1: hazards + Right Now.
+   Page 2: full action checklist.
+8. **Non-Hawaiʻi addresses** — friendly reject with explanation.
+9. **Multilingual** — ship v1 English-only, but schema supports locale
+   keys from day one so translation is later content work.
+10. **Geocoding** — Nominatim for v2.0 with a clear privacy disclosure;
+    pursue state geocoding in v2.x once HI-EMA conversations begin.
 
 ### Preserved from v1
 - A complete sibling-directory snapshot at
   `../hawaii-hazards-map-v1-gis-viewer/` — runnable standalone.
-- The `v1.0.0` tag (to be applied on commit `785e022`, the last commit
-  before this versioning policy was added) will pin the v1 codebase in
-  git history.
+- The `v1.0.0` git tag on commit `785e022` matches that snapshot's
+  contents.
 
 ---
 
-## [v1.0.0] — 2026-05-14 *(snapshot taken, tag pending)*
+## [v1.0.0] — 2026-05-14 *(tagged)*
 
 The "GIS viewer" major version: an interactive multi-hazard web map of
 the main Hawaiian islands. Static single-page app (MapLibre + vanilla
