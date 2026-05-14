@@ -208,6 +208,17 @@ select.btn {
   color: var(--ink-muted);
   font-style: italic;
 }
+.layer-count {
+  font-size: 10px;
+  color: var(--ink-muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1px 6px;
+  min-width: 14px;
+  text-align: center;
+}
+.layer-count:empty { display: none; }
 
 /* Tools */
 .tool-btn {
@@ -430,7 +441,8 @@ code {
 @media (max-width: 800px) {
   .hamburger { display: block; }
   .brand .subtitle { display: none; }
-  #geocoder-input { width: 160px; }
+  .brand { flex-shrink: 0; }
+  #geocoder-input { width: 140px; }
   #geocoder-results { width: 90vw; right: -50%; }
 
   #sidebar {
@@ -456,10 +468,15 @@ code {
   }
 }
 
+@media (max-width: 600px) {
+  .brand h1 { display: none; }
+  #quick-jump { display: none; }
+}
+
 @media (max-width: 480px) {
-  .brand h1 { font-size: 14px; }
   #app-header { padding: 0 8px; }
   #btn-home { display: none; }
+  #geocoder-input { width: 110px; }
 }
 
 /* Popup style */

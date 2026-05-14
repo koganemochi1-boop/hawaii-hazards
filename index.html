@@ -58,10 +58,9 @@
     </section>
 
     <section class="panel attribution">
-      <h2>Data Sources</h2>
+      <h2>About</h2>
       <p>
-        State of Hawaiʻi Statewide GIS Program (DFIRM, tsunami, lava, fire, SLR),
-        FEMA NFHL, NOAA Office for Coastal Management, USGS HVO.
+        <button id="btn-info" class="link-btn">Data sources, disclaimer, &amp; methodology →</button>
       </p>
       <p class="muted">For planning awareness only — not for regulatory determination.</p>
     </section>
@@ -98,6 +97,54 @@
           <span id="batch-status" class="muted"></span>
         </div>
         <div id="batch-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-modal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>About this map</h3>
+        <button class="close-btn" data-close="info-modal" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <h4>Hazard layers &amp; sources</h4>
+        <ul style="padding-left:18px;line-height:1.55">
+          <li><strong>FEMA Flood Zones (DFIRM)</strong> — State of Hawaiʻi Statewide GIS, <em>Hazards/MapServer/6</em>. Live ArcGIS REST query (zoom ≥ 10).</li>
+          <li><strong>Wildfire Risk Areas</strong> — State of Hawaiʻi Statewide GIS, <em>Hazards/MapServer/7</em>. Live ArcGIS REST query.</li>
+          <li><strong>Sea Level Rise + 1% Coastal Flood (3.2 ft)</strong> — <em>Hazards/MapServer/15</em>. Live ArcGIS REST.</li>
+          <li><strong>Tsunami Evacuation Zones</strong> — bundled GeoJSON from <em>Hazards/MapServer/11</em>.</li>
+          <li><strong>Lava Flow Hazard Zones</strong> (USGS 1–9) — bundled GeoJSON from <em>Hazards/MapServer/3</em>.</li>
+        </ul>
+
+        <h4>A note on hurricane storm surge</h4>
+        <p>
+          Hawaiʻi does not publish SLOSH-style hurricane storm-surge vector data.
+          The combined "1% coastal flood + 3.2 ft sea level rise" layer is used here as the de facto
+          coastal storm hazard scenario. Tsunami evacuation zones serve as the practical
+          coastal evacuation framework during hurricanes per Hawaiʻi emergency management.
+        </p>
+
+        <h4>Composite risk score</h4>
+        <p>
+          Each layer contributes a weight × hit-score (0 to 1) to a composite. Weights:
+          Lava 0.25, Tsunami 0.20, DFIRM 0.20, SLR + Coastal Flood 0.20, Wildfire 0.15.
+          Buckets: 0–0.15 Low, 0.15–0.35 Moderate, 0.35–0.60 High, 0.60–0.85 Severe, 0.85+ Extreme.
+        </p>
+
+        <h4>Disclaimer</h4>
+        <p>
+          This map is for <strong>planning awareness only</strong>. It is not a substitute for
+          official FEMA flood determinations, USGS lava hazard products, NOAA / Hawaiʻi sea-level
+          rise scenarios, county tsunami evacuation orders, or emergency-management decisions.
+          Geometries are simplified server-side for performance and may not match authoritative
+          maps at the parcel scale.
+        </p>
+
+        <p class="muted" style="font-size:11px">
+          Geocoding: © OpenStreetMap / Nominatim contributors.
+          Basemap tiles: © OpenStreetMap contributors.
+        </p>
       </div>
     </div>
   </div>

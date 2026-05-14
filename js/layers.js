@@ -75,6 +75,7 @@ export class LayerManager {
     if (!res.ok) throw new Error(`Failed to load ${hazard.url}: ${res.status}`);
     const data = await res.json();
     this.bundledData.set(hazard.id, data);
+    this._updateCounter(hazard.id, data.features?.length || 0);
     return data;
   }
 
@@ -195,6 +196,19 @@ export class LayerManager {
     this.liveData.set(hazard.id, fc);
     const src = this.map.getSource(hazard.id);
     if (src) src.setData(fc);
+    this._updateCounter(hazard.id, fc.features?.length || 0);
+  }
+
+  _updateCounter(id, n) {
+    const el = document.querySelector(`[data-layer-count="${id}"]`);
+    if (!el) return;
+    el.textContent = n > 0 ? String(n) : '';
+  }
+
+  /** Total features for a hazard currently loaded in its source. */
+  featureCount(hazardId) {
+    const src = this.map.getSource(hazardId);
+    return src?._data?.features?.length || 0;
   }
 
   _setLoading(id, loading) {

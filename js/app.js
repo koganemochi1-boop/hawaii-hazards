@@ -125,6 +125,11 @@ function wireGlobalUiControls() {
     clearGeocoderMarker();
   });
 
+  // Info modal
+  document.getElementById('btn-info').addEventListener('click', () => {
+    document.getElementById('info-modal').classList.remove('hidden');
+  });
+
   // Share button — write current hash state then copy URL
   document.getElementById('btn-share').addEventListener('click', async () => {
     writeHashState(map, layerManager);
@@ -191,6 +196,7 @@ function renderLayerList() {
         <input type="checkbox" data-hazard="${h.id}" />
         <span class="layer-swatch" style="background:${swatchColor}"></span>
         <span class="layer-name">${escapeHtml(h.name)}</span>
+        <span class="layer-count" data-layer-count="${h.id}"></span>
         <span class="layer-loading" data-layer-loading="${h.id}"></span>
       </label>
     `;
