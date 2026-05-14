@@ -10,8 +10,9 @@ import { setupDrawAnalysis } from './draw-analysis.js';
 import { setupBatchCsv } from './batch-csv.js';
 import { setupExport } from './export.js';
 import { wireCloseButtons, hideResultPanel } from './ui-result.js';
-import { readHashState, setupHashSync } from './url-state.js';
+import { readHashState, setupHashSync, writeHashState } from './url-state.js';
 import { toast } from './toast.js';
+import { setupMeasure } from './measure.js';
 
 const LIGHT_STYLE = {
   version: 8,
@@ -55,7 +56,7 @@ map.addControl(new maplibregl.ScaleControl({ unit: 'imperial' }), 'bottom-right'
 
 const layerManager = new LayerManager(map);
 
-map.on('load', async () => {
+async function onMapReady() {
   const hashState = readHashState();
 
   // Initial view: either from URL hash, or fit to all islands
@@ -72,14 +73,19 @@ map.on('load', async () => {
   });
   attachFeaturePopups(map);
 
-  setupGeocoder(map);
-  setupPointQuery(map, layerManager);
-  setupDrawAnalysis(map, layerManager);
-  setupBatchCsv(layerManager);
-  setupExport(map);
-  wireCloseButtons();
-  wireGlobalUiControls();
-  setupHashSync(map, layerManager);
+  // Each setup is wrapped so a single broken module can't kill the rest of init.
+  const safeRun = (name, fn) => {
+    try { fn(); } catch (e) { console.error(`[init] ${name} failed:`, e); }
+  };
+  safeRun('setupGeocoder', () => setupGeocoder(map));
+  safeRun('setupPointQuery', () => setupPointQuery(map, layerManager));
+  safeRun('setupDrawAnalysis', () => setupDrawAnalysis(map, layerManager));
+  safeRun('setupBatchCsv', () => setupBatchCsv(layerManager));
+  safeRun('setupExport', () => setupExport(map));
+  safeRun('wireCloseButtons', () => wireCloseButtons());
+  safeRun('wireGlobalUiControls', () => wireGlobalUiControls());
+  safeRun('setupHashSync', () => setupHashSync(map, layerManager));
+  safeRun('setupMeasure', () => setupMeasure(map));
 
   // Preload bundled data in the background so cross-layer queries work
   // before the user explicitly turns layers on.
@@ -91,7 +97,17 @@ map.on('load', async () => {
   } else {
     await layerManager.toggle('tsunami', true);
   }
-});
+}
+
+// Run onMapReady once the map is ready. Handle the case where the style
+// loaded synchronously before the listener was attached.
+if (map.loaded()) {
+  onMapReady().catch(e => console.error('[init] onMapReady failed:', e));
+} else {
+  map.on('load', () => {
+    onMapReady().catch(e => console.error('[init] onMapReady failed:', e));
+  });
+}
 
 function syncLayerCheckboxes(activeIds) {
   document.querySelectorAll('input[data-hazard]').forEach(cb => {
@@ -105,6 +121,19 @@ function wireGlobalUiControls() {
   document.getElementById('btn-home').addEventListener('click', () => {
     map.fitBounds(HAWAII_BOUNDS, { padding: 30, duration: 600 });
     clearGeocoderMarker();
+  });
+
+  // Share button — write current hash state then copy URL
+  document.getElementById('btn-share').addEventListener('click', async () => {
+    writeHashState(map, layerManager);
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast('Link copied to clipboard');
+    } catch (_) {
+      // Clipboard API can fail on insecure contexts or denied permission
+      toast('Copy this link: ' + url, 6000);
+    }
   });
 
   // Clear-all-layers

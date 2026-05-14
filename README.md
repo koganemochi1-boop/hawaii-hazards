@@ -18,14 +18,19 @@ Built as a single-page static site — no build step, no API keys, no server-sid
 
 ## Tools
 
-- **Layer toggles** — sidebar checkboxes; each layer's swatch matches its primary color
+- **Layer toggles** — sidebar checkboxes with per-layer color swatches; "clear all" link to turn everything off
 - **Dynamic legend** — auto-updates based on which layers are active
 - **Click popups** — click any rendered feature to see zone code, subtype, BFE, etc.
 - **Address / place search** — Nominatim (OpenStreetMap) geocoder, bounded to Hawaiʻi
 - **What's at this location?** — click any point, get every hazard intersecting it plus a composite weighted risk score
 - **Draw area & summarize** — draw a polygon, get per-hazard % coverage and max risk inside it
-- **Batch CSV lookup** — paste a list of addresses or a CSV with an `address` column; each is geocoded then scored against every hazard. Downloadable as a results CSV.
-- **PNG / PDF export** — capture the current map view
+- **Measure distance** — two-click great-circle distance in miles, km, and meters
+- **Batch CSV lookup** — paste rows or load a CSV with either an `address` column (geocoded via Nominatim) or `lat`+`lng` columns (skips geocoding, much faster). Downloadable results CSV.
+- **PNG / PDF export** — capture the current map view (PNG, or letter-size landscape PDF with title and attribution)
+- **Shareable URL** — the map's center, zoom, and active layers are encoded in the URL hash; the **Share** button copies the link to your clipboard
+- **Home / reset** — fit-to-all-islands at any time
+- **Keyboard** — `Esc` closes any open panel or modal
+- **Mobile** — sidebar collapses to a drawer behind a hamburger menu on narrow screens
 
 ## Composite risk score
 
@@ -79,8 +84,9 @@ All data services used (Hawaiʻi GIS, FEMA, Nominatim) set permissive CORS, so t
 hawaii-hazards-map/
 ├── index.html
 ├── css/styles.css
+├── CLAUDE.md               # notes for future Claude sessions
 ├── js/
-│   ├── app.js              # bootstrap
+│   ├── app.js              # bootstrap; wires everything via try/catch safeRun
 │   ├── config.js           # hazard layer definitions + risk weights
 │   ├── layers.js           # ArcGIS REST adapter + MapLibre layer manager
 │   ├── legend.js
@@ -89,14 +95,19 @@ hawaii-hazards-map/
 │   ├── risk.js             # point + polygon scoring
 │   ├── point-query.js
 │   ├── draw-analysis.js
-│   ├── batch-csv.js
-│   ├── export.js
+│   ├── batch-csv.js        # address / lat+lng CSV scoring
+│   ├── measure.js          # two-click great-circle distance
+│   ├── export.js           # PNG + PDF
+│   ├── url-state.js        # hash sync for shareable links
+│   ├── toast.js            # bottom-of-screen toast helper
 │   └── ui-result.js        # right-side result panel helpers
 └── data/
     ├── tsunami-evac.geojson
     ├── lava-zones.geojson
-    └── volcano-boundaries.geojson  (available for future use)
+    └── volcano-boundaries.geojson  (downloaded; not rendered in v1)
 ```
+
+For details on the architecture and how to add new hazard layers, see [CLAUDE.md](CLAUDE.md).
 
 ## Refreshing the bundled data
 
