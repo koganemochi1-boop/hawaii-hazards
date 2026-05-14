@@ -28,13 +28,13 @@
     </div>
   </header>
 
-  <aside id="sidebar">
-    <section class="panel" id="panel-layers">
-      <h2>
+  <aside id="sidebar" aria-label="Map controls">
+    <section class="panel" id="panel-layers" aria-labelledby="panel-layers-heading">
+      <h2 id="panel-layers-heading">
         Hazard Layers
         <button id="btn-clear-layers" class="link-btn" title="Turn off all layers">clear all</button>
       </h2>
-      <div id="layer-list"></div>
+      <div id="layer-list" role="group" aria-label="Hazard layer toggles"></div>
     </section>
 
     <section class="panel" id="panel-tools">
@@ -67,7 +67,7 @@
     </section>
   </aside>
 
-  <main id="map"></main>
+  <main id="map" role="application" aria-label="Hawaiʻi natural hazards map"></main>
 
   <!-- Result overlay panels (hidden until used) -->
   <div id="result-panel" class="result-panel hidden">
