@@ -1,0 +1,188 @@
+{
+  "$schema": "./schemas/hazards.schema.json",
+  "version": "0.1.0",
+  "lastReviewedBy": "TBD — pending HI-EMA + Red Cross Hawaiʻi review",
+  "lastReviewedDate": null,
+  "notes": "Plain-language translation table mapping each hazard's technical zones to resident-facing severity, explanations, and action references. The tsunami hazard is the worked example; the other four are stubs awaiting content. See docs/content-style-guide.md for how to fill them in.",
+
+  "hazards": [
+    {
+      "id": "tsunami",
+      "displayName": "Tsunami",
+      "shortName": "Tsunami",
+      "iconKey": "wave",
+      "spatialKey": "tsunami",
+      "sortHint": 10,
+
+      "zones": [
+        {
+          "match": { "field": "zone_type", "equals": "Extreme Tsunami Evacuation Zone" },
+          "severity": "high",
+          "label": { "en": "In an extreme tsunami evacuation zone" },
+          "oneLiner": { "en": "If a major tsunami warning is issued, this is one of the first areas told to evacuate." },
+          "plainExplanation": { "en": "Your address is in Hawaiʻi's extreme tsunami evacuation zone. After a great earthquake on the Pacific Rim — for example a magnitude-9 event off Japan, Chile, or Alaska — the Pacific Tsunami Warning Center can issue a warning within minutes, and the wave can arrive in hours. Everyone in this zone is expected to leave on foot, not by car, as soon as a warning is broadcast." },
+          "probabilityFraming": { "en": "Pacific-wide tsunamis large enough to trigger evacuation orders happen on average every 10–20 years. The last major one to strike Hawaiʻi destroyed parts of downtown Hilo in 1960. Smaller advisories occur every few years." },
+          "technicalCode": "Extreme Tsunami Evacuation Zone (XTEZ)",
+          "actionIds": [
+            "know_tsunami_route",
+            "sign_up_for_alerts",
+            "build_go_bag",
+            "identify_two_routes",
+            "practice_evacuation",
+            "build_emergency_kit",
+            "document_home_insurance"
+          ]
+        },
+        {
+          "match": { "field": "zone_type", "equals": "Tsunami Evacuation Zone" },
+          "severity": "high",
+          "label": { "en": "In a tsunami evacuation zone" },
+          "oneLiner": { "en": "If a tsunami warning is issued, you should be ready to evacuate." },
+          "plainExplanation": { "en": "Your address is in Hawaiʻi's standard tsunami evacuation zone. Tsunamis from distant earthquakes can give hours of warning; tsunamis from a local quake (felt strongly for 20+ seconds) give only minutes — in that case, evacuate immediately on foot without waiting for sirens." },
+          "probabilityFraming": { "en": "Pacific-wide tsunamis large enough to trigger evacuation orders happen on average every 10–20 years. Local tsunamis are rarer but can arrive within minutes of a felt earthquake." },
+          "technicalCode": "Tsunami Evacuation Zone (TEZ)",
+          "actionIds": [
+            "know_tsunami_route",
+            "sign_up_for_alerts",
+            "build_go_bag",
+            "build_emergency_kit"
+          ]
+        },
+        {
+          "match": { "field": "zone_type", "equals": "Tsunami Safe Zone" },
+          "severity": "low",
+          "label": { "en": "In a designated tsunami safe zone" },
+          "oneLiner": { "en": "Your address is uphill of mapped tsunami inundation — but you may help others evacuate to here." },
+          "plainExplanation": { "en": "Your address is above the tsunami evacuation zone. You're not expected to evacuate, and your neighborhood may host people fleeing from coastal areas during a warning." },
+          "probabilityFraming": null,
+          "technicalCode": "Tsunami Safe Zone",
+          "actionIds": ["help_neighbors_evacuate", "sign_up_for_alerts"]
+        }
+      ],
+
+      "noMatch": {
+        "severity": "none",
+        "label": { "en": "Not in a tsunami evacuation zone" },
+        "oneLiner": { "en": "Your address is outside Hawaiʻi's mapped tsunami evacuation zones." },
+        "plainExplanation": { "en": "Hawaiʻi only maps evacuation zones in coastal-exposed areas. Your address is outside those. You may still want to know what to do if you're at the beach or traveling near the coast when a warning is issued." },
+        "actionIds": ["sign_up_for_alerts"]
+      },
+
+      "authoritativeSources": [
+        { "label": "Hawaiʻi Emergency Management Agency — Tsunami",
+          "url": "https://dod.hawaii.gov/hiema/public-resources/tsunami/" },
+        { "label": "Pacific Tsunami Warning Center",
+          "url": "https://www.tsunami.gov/" },
+        { "label": "Red Cross — Tsunami Safety",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/tsunami.html" }
+      ],
+
+      "dataProvenance": {
+        "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/11",
+        "spatialAttribution": "Hawaiʻi Statewide GIS Program",
+        "lastDownloaded": "2026-05-13",
+        "refreshCadence": "annual"
+      }
+    },
+
+    {
+      "id": "flood",
+      "displayName": "Flood (FEMA flood zones)",
+      "shortName": "Flood",
+      "iconKey": "flood",
+      "spatialKey": "dfirm",
+      "sortHint": 20,
+      "zones": [],
+      "noMatch": {
+        "severity": "none",
+        "label": { "en": "Not in a FEMA-mapped flood zone" },
+        "oneLiner": { "en": "Your address is outside FEMA's mapped flood hazard areas." },
+        "plainExplanation": { "en": "TODO: fill in plain explanation per the style guide." },
+        "actionIds": ["sign_up_for_alerts"]
+      },
+      "authoritativeSources": [],
+      "dataProvenance": {
+        "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/6 (State DFIRM)",
+        "spatialAttribution": "FEMA NFHL via Hawaiʻi Statewide GIS",
+        "lastDownloaded": null,
+        "refreshCadence": "live"
+      },
+      "_TODO": "Populate zones for V/VE (coastal high hazard), A/AE/AH/AO (100-yr SFHA), X-shaded (500-yr), X-unshaded (minimal), D (undetermined). See content/_examples/tsunami.example.json for the pattern."
+    },
+
+    {
+      "id": "wildfire",
+      "displayName": "Wildfire risk area",
+      "shortName": "Wildfire",
+      "iconKey": "fire",
+      "spatialKey": "fire",
+      "sortHint": 30,
+      "zones": [],
+      "noMatch": {
+        "severity": "none",
+        "label": { "en": "Not in a mapped wildfire risk area" },
+        "oneLiner": { "en": "Your address is outside mapped community wildfire risk areas." },
+        "plainExplanation": { "en": "TODO." },
+        "actionIds": ["sign_up_for_alerts"]
+      },
+      "authoritativeSources": [],
+      "dataProvenance": {
+        "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/7 (Fire Risk Areas)",
+        "spatialAttribution": "Hawaiʻi Wildfire Management Organization",
+        "lastDownloaded": null,
+        "refreshCadence": "live"
+      },
+      "_TODO": "Populate zones for risk_rating values: High, Medium, Low."
+    },
+
+    {
+      "id": "coastal",
+      "displayName": "Coastal flooding (1% + 3.2 ft sea level rise)",
+      "shortName": "Coastal storm / SLR",
+      "iconKey": "wave_surge",
+      "spatialKey": "slr",
+      "sortHint": 25,
+      "zones": [],
+      "noMatch": {
+        "severity": "none",
+        "label": { "en": "Not in the 1% coastal flood + 3.2 ft sea level rise zone" },
+        "oneLiner": { "en": "Your address is outside Hawaiʻi's combined coastal-flooding and sea-level-rise scenario." },
+        "plainExplanation": { "en": "TODO." },
+        "actionIds": ["sign_up_for_alerts"]
+      },
+      "authoritativeSources": [],
+      "dataProvenance": {
+        "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/15",
+        "spatialAttribution": "Hawaiʻi Sea Level Rise Vulnerability and Adaptation Report",
+        "lastDownloaded": null,
+        "refreshCadence": "live"
+      },
+      "_TODO": "Populate zones for combined-flood scenarios. This layer is also serving as the de facto hurricane storm-surge proxy for Hawaiʻi (SLOSH-style vector data is not published). Plain language should frame it as 'coastal flooding from a major hurricane or future high tides', not just SLR."
+    },
+
+    {
+      "id": "lava",
+      "displayName": "Lava flow hazard zone (USGS 1–9)",
+      "shortName": "Lava",
+      "iconKey": "volcano",
+      "spatialKey": "lava",
+      "sortHint": 40,
+      "zones": [],
+      "noMatch": {
+        "severity": "none",
+        "label": { "en": "Outside USGS lava flow hazard zones" },
+        "oneLiner": { "en": "Your address is outside the USGS lava flow hazard zones, which only cover the Big Island." },
+        "plainExplanation": { "en": "TODO." },
+        "actionIds": []
+      },
+      "authoritativeSources": [],
+      "dataProvenance": {
+        "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/3",
+        "spatialAttribution": "USGS Hawaiian Volcano Observatory",
+        "lastDownloaded": "2026-05-13",
+        "refreshCadence": "rare — zones revised when USGS publishes updates"
+      },
+      "_TODO": "Populate zones for hzone values 1–9. Zone 1 (Mauna Loa / Kīlauea active rift) is severity:high. Zones 2–3 severity:moderate. Zones 4–6 severity:low. Zones 7–9 severity:none-but-acknowledged."
+    }
+  ]
+}

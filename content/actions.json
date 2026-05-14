@@ -1,0 +1,165 @@
+{
+  "$schema": "./schemas/actions.schema.json",
+  "version": "0.1.0",
+  "lastReviewedBy": "TBD — pending HI-EMA + Red Cross Hawaiʻi review",
+  "lastReviewedDate": null,
+  "notes": "Preparedness action library. Each entry is referenced by ID from content/hazards.json. The synthesis engine deduplicates actions across hazards by `dedupeKey` and groups them by `timeHorizon`. Every action must cite at least one authoritative source.",
+
+  "actions": [
+    {
+      "id": "sign_up_for_alerts",
+      "title": { "en": "Sign up for emergency alerts" },
+      "description": { "en": "Turn on Wireless Emergency Alerts on your phone (iPhone: Settings → Notifications → scroll to Government Alerts; Android: Settings → Notifications → Emergency Alerts). Then register for your county's local alert system." },
+      "timeHorizon": "right_now",
+      "estimatedTime": "10 minutes",
+      "hazardIds": ["tsunami", "flood", "wildfire", "coastal", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "alert_signup",
+      "sources": [
+        { "label": "HI-EMA emergency alerts",
+          "url": "https://dod.hawaii.gov/hiema/" },
+        { "label": "City & County of Honolulu — HNL.info",
+          "url": "https://www.honolulu.gov/dem/notification.html" },
+        { "label": "Maui County emergency alerts",
+          "url": "https://www.mauicounty.gov/2257/Emergency-Alerts" }
+      ]
+    },
+
+    {
+      "id": "know_tsunami_route",
+      "title": { "en": "Know your tsunami evacuation route" },
+      "description": { "en": "Walk or drive your route from home to the nearest tsunami safe zone in daylight, before you need it. Maps for every island are at the HI-EMA link below. If you live within a half mile of the coast, plan to evacuate on foot — roads jam in a warning." },
+      "timeHorizon": "right_now",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami"],
+      "appliesToSeverities": ["high"],
+      "dedupeKey": "tsunami_evacuation_route",
+      "sources": [
+        { "label": "HI-EMA tsunami evacuation maps",
+          "url": "https://dod.hawaii.gov/hiema/public-resources/tsunami/" }
+      ]
+    },
+
+    {
+      "id": "identify_two_routes",
+      "title": { "en": "Identify two evacuation routes" },
+      "description": { "en": "Your primary route may be blocked by debris, traffic, or downed lines. Walk both routes once so you know them by sight, not by phone." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "45 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["high"],
+      "dedupeKey": "evacuation_route_planning",
+      "sources": [
+        { "label": "Red Cross — How to Prepare for Emergencies",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/make-a-plan.html" }
+      ]
+    },
+
+    {
+      "id": "practice_evacuation",
+      "title": { "en": "Practice your evacuation plan with your household" },
+      "description": { "en": "Walk through it once with everyone who lives with you, including kids and elderly relatives. Decide where you'll meet if you get separated and how you'll find each other if cell service is down." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["high"],
+      "dedupeKey": "evacuation_practice",
+      "sources": [
+        { "label": "Red Cross — Make a Family Emergency Plan",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/make-a-plan.html" }
+      ]
+    },
+
+    {
+      "id": "build_go_bag",
+      "title": { "en": "Build a grab-and-go bag" },
+      "description": { "en": "A small backpack near your door with: 1 day of water and food per person, copies of IDs, cash, medications for 3 days, a phone charger, a flashlight, and a change of clothes. Designed for evacuations where you have minutes, not hours." },
+      "timeHorizon": "right_now",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["tsunami", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["high"],
+      "dedupeKey": "go_bag",
+      "sources": [
+        { "label": "Ready.gov — Build a Kit",
+          "url": "https://www.ready.gov/kit" },
+        { "label": "HI-EMA — 14 Days Ready",
+          "url": "https://dod.hawaii.gov/hiema/public-resources/14-days-ready/" }
+      ]
+    },
+
+    {
+      "id": "build_emergency_kit",
+      "title": { "en": "Build a 14-day emergency kit" },
+      "description": { "en": "Hawaiʻi's official guidance is 14 days of supplies, not the mainland's 3 days, because of our isolation from supply chains. Cover water (1 gallon per person per day), shelf-stable food, medications, batteries, cash, important documents, and a first-aid kit." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "2 hours over a weekend",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "emergency_kit",
+      "sources": [
+        { "label": "HI-EMA — 14 Days Ready",
+          "url": "https://dod.hawaii.gov/hiema/public-resources/14-days-ready/" }
+      ]
+    },
+
+    {
+      "id": "document_home_insurance",
+      "title": { "en": "Document your home for an insurance claim" },
+      "description": { "en": "Walk every room with your phone camera, recording video and photos. Open closets and drawers. Store the file in cloud storage. After a disaster you'll need to prove what you owned; memory and paperwork are not enough." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "home_inventory",
+      "sources": [
+        { "label": "Insurance Information Institute — Home Inventory",
+          "url": "https://www.iii.org/article/how-create-home-inventory" }
+      ]
+    },
+
+    {
+      "id": "help_neighbors_evacuate",
+      "title": { "en": "Learn how to host evacuating neighbors" },
+      "description": { "en": "If your home is above the evacuation zone, families fleeing the coast may walk to your neighborhood during a warning. Knowing a few neighbors, having an extra gallon of water, and leaving your porch light on at night is most of what it takes." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "ongoing",
+      "hazardIds": ["tsunami"],
+      "appliesToSeverities": ["low"],
+      "dedupeKey": "neighbor_hosting",
+      "sources": [
+        { "label": "HI-EMA — Community Preparedness",
+          "url": "https://dod.hawaii.gov/hiema/" }
+      ]
+    },
+
+    {
+      "id": "review_flood_insurance",
+      "title": { "en": "Review your flood insurance coverage" },
+      "description": { "en": "Standard homeowner's insurance does NOT cover flood damage. If you're in a FEMA flood zone, federally backed mortgages usually require flood insurance through the National Flood Insurance Program; otherwise it's optional but often a good idea. There's a 30-day waiting period after purchase before coverage starts — don't wait until a storm is forecast." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["flood", "coastal"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "flood_insurance",
+      "sources": [
+        { "label": "FEMA — National Flood Insurance Program",
+          "url": "https://www.floodsmart.gov/" }
+      ]
+    },
+
+    {
+      "id": "create_defensible_space",
+      "title": { "en": "Create defensible space around your home" },
+      "description": { "en": "Clear dry brush, leaves, and dead vegetation within 30 feet of your house. Keep grass mowed short in dry months. Trim tree branches at least 10 feet from your roof and chimney. This is the single highest-impact thing you can do to reduce your home's wildfire risk." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "4 hours initially, ongoing seasonally",
+      "hazardIds": ["wildfire"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "defensible_space",
+      "sources": [
+        { "label": "Hawaiʻi Wildfire Management Organization — Ready, Set, Go!",
+          "url": "https://www.hawaiiwildfire.org/ready-set-go" }
+      ]
+    }
+  ]
+}

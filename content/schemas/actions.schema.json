@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "actions.schema.json",
+  "title": "Preparedness action library",
+  "description": "Actions cited by content/hazards.json. The synthesis engine dedupes by `dedupeKey` and groups by `timeHorizon`.",
+  "type": "object",
+  "required": ["version", "actions"],
+  "properties": {
+    "$schema":          { "type": "string" },
+    "version":          { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "lastReviewedBy":   { "type": ["string", "null"] },
+    "lastReviewedDate": { "type": ["string", "null"] },
+    "notes":            { "type": "string" },
+    "actions":          { "type": "array", "items": { "$ref": "#/$defs/action" } }
+  },
+
+  "$defs": {
+    "localizedString": {
+      "type": "object",
+      "required": ["en"],
+      "properties": { "en": { "type": "string", "minLength": 1 } },
+      "additionalProperties": { "type": "string" }
+    },
+
+    "source": {
+      "type": "object",
+      "required": ["label", "url"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "url":   { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+
+    "action": {
+      "type": "object",
+      "required": [
+        "id", "title", "description", "timeHorizon",
+        "hazardIds", "appliesToSeverities", "sources"
+      ],
+      "properties": {
+        "id":                    { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "title":                 { "$ref": "#/$defs/localizedString" },
+        "description":           { "$ref": "#/$defs/localizedString" },
+        "timeHorizon":           { "enum": ["right_now", "this_week", "this_month"] },
+        "estimatedTime":         { "type": "string", "description": "e.g. \"10 minutes\", \"1 hour\", \"ongoing\"." },
+        "hazardIds":             { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+        "appliesToSeverities":   {
+          "type": "array",
+          "items": { "enum": ["low", "moderate", "high"] },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "dedupeKey":             { "type": "string", "description": "Actions sharing a dedupeKey collapse to one row across hazards." },
+        "sources":               { "type": "array", "items": { "$ref": "#/$defs/source" }, "minItems": 1 }
+      }
+    }
+  }
+}
