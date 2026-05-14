@@ -13,6 +13,7 @@ import { wireCloseButtons, hideResultPanel } from './ui-result.js';
 import { readHashState, setupHashSync, writeHashState } from './url-state.js';
 import { toast } from './toast.js';
 import { setupMeasure } from './measure.js';
+import { setupQuickJump } from './places.js';
 
 const LIGHT_STYLE = {
   version: 8,
@@ -86,6 +87,7 @@ async function onMapReady() {
   safeRun('wireGlobalUiControls', () => wireGlobalUiControls());
   safeRun('setupHashSync', () => setupHashSync(map, layerManager));
   safeRun('setupMeasure', () => setupMeasure(map));
+  safeRun('setupQuickJump', () => setupQuickJump(map));
 
   // Preload bundled data in the background so cross-layer queries work
   // before the user explicitly turns layers on.

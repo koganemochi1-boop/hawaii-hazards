@@ -161,8 +161,10 @@ export class LayerManager {
       const src = this.map.getSource(hazard.id);
       if (src) src.setData({ type: 'FeatureCollection', features: [] });
       this.liveData.set(hazard.id, { type: 'FeatureCollection', features: [] });
+      this._setZoomHint(hazard, true);
       return;
     }
+    this._setZoomHint(hazard, false);
 
     const bounds = this.map.getBounds();
     const bbox = [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
@@ -197,7 +199,21 @@ export class LayerManager {
 
   _setLoading(id, loading) {
     const el = document.querySelector(`[data-layer-loading="${id}"]`);
-    if (el) el.textContent = loading ? 'loading…' : '';
+    if (el && !el.dataset.zoomHint) {
+      el.textContent = loading ? 'loading…' : '';
+    }
+  }
+
+  _setZoomHint(hazard, needsZoom) {
+    const el = document.querySelector(`[data-layer-loading="${hazard.id}"]`);
+    if (!el) return;
+    if (needsZoom) {
+      el.textContent = `zoom in (≥${hazard.minZoom})`;
+      el.dataset.zoomHint = '1';
+    } else if (el.dataset.zoomHint) {
+      el.textContent = '';
+      delete el.dataset.zoomHint;
+    }
   }
 
   /**
@@ -233,6 +249,13 @@ export class LayerManager {
 
 async function queryArcGISLayer(hazard, bbox) {
   const url = new URL(`${hazard.url}/query`);
+  // Server-side geometry simplification: degrees per pixel at the bbox's
+  // smaller dimension, so render fidelity stays good while keeping payloads
+  // small. Without this, the Hawaiʻi SLR layer returns 500 on Big Island
+  // bboxes because its un-simplified coastline geometry is huge.
+  const span = Math.min(bbox[2] - bbox[0], bbox[3] - bbox[1]);
+  const offset = Math.max(span / 1024, 0.00002); // ~2m floor
+
   const params = {
     where: '1=1',
     geometry: bbox.join(','),
@@ -241,6 +264,7 @@ async function queryArcGISLayer(hazard, bbox) {
     outSR: '4326',
     outFields: hazard.queryFields || '*',
     returnGeometry: 'true',
+    maxAllowableOffset: String(offset),
     f: 'geojson',
   };
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
