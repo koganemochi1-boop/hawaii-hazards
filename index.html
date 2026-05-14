@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hawaiʻi Natural Hazards Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header id="app-header">
+    <div class="brand">
+      <button id="btn-toggle-sidebar" class="hamburger" aria-label="Toggle sidebar">☰</button>
+      <h1>Hawaiʻi Natural Hazards</h1>
+      <span class="subtitle">Interactive multi-hazard viewer</span>
+    </div>
+    <div class="header-actions">
+      <input id="geocoder-input" type="search" placeholder="Search address or place…" autocomplete="off" />
+      <div id="geocoder-results" class="geocoder-results hidden"></div>
+      <button id="btn-home" class="btn" title="Reset view to all Hawaiian Islands">⌂ Home</button>
+      <button id="btn-export-png" class="btn" title="Export current map view as PNG">PNG</button>
+      <button id="btn-export-pdf" class="btn" title="Export current map view as PDF">PDF</button>
+    </div>
+  </header>
+
+  <aside id="sidebar">
+    <section class="panel" id="panel-layers">
+      <h2>
+        Hazard Layers
+        <button id="btn-clear-layers" class="link-btn" title="Turn off all layers">clear all</button>
+      </h2>
+      <div id="layer-list"></div>
+    </section>
+
+    <section class="panel" id="panel-tools">
+      <h2>Tools</h2>
+      <button id="btn-point-query" class="tool-btn">
+        <span class="icon">◎</span> What's at this location?
+      </button>
+      <button id="btn-draw" class="tool-btn">
+        <span class="icon">▱</span> Draw area &amp; summarize
+      </button>
+      <button id="btn-batch" class="tool-btn">
+        <span class="icon">▤</span> Batch CSV lookup
+      </button>
+    </section>
+
+    <section class="panel" id="panel-legend">
+      <h2>Legend</h2>
+      <div id="legend-list"><p class="muted">Turn on layers to see legend entries.</p></div>
+    </section>
+
+    <section class="panel attribution">
+      <h2>Data Sources</h2>
+      <p>
+        State of Hawaiʻi Statewide GIS Program (DFIRM, tsunami, lava, fire, SLR),
+        FEMA NFHL, NOAA Office for Coastal Management, USGS HVO.
+      </p>
+      <p class="muted">For planning awareness only — not for regulatory determination.</p>
+    </section>
+  </aside>
+
+  <main id="map"></main>
+
+  <!-- Result overlay panels (hidden until used) -->
+  <div id="result-panel" class="result-panel hidden">
+    <div class="result-header">
+      <h3 id="result-title">Result</h3>
+      <button class="close-btn" data-close="result-panel" aria-label="Close">×</button>
+    </div>
+    <div id="result-body" class="result-body"></div>
+  </div>
+
+  <div id="batch-panel" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Batch CSV Lookup</h3>
+        <button class="close-btn" data-close="batch-panel" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="muted">
+          Paste addresses (one per line), or a CSV with either an <code>address</code> column
+          or <code>lat</code>+<code>lng</code> columns. lat/lng rows skip geocoding and are
+          much faster. Each row is scored against every hazard.
+        </p>
+        <textarea id="batch-input" placeholder="123 Main St, Honolulu HI&#10;456 Beach Rd, Lahaina HI&#10;&#10;# or:&#10;lat,lng,label&#10;21.276,-157.826,Waikiki"></textarea>
+        <div class="modal-actions">
+          <input id="batch-file" type="file" accept=".csv,.txt" style="display:none" />
+          <button id="btn-batch-upload" class="btn" title="Load a .csv file">Load CSV…</button>
+          <button id="btn-batch-run" class="btn primary">Run lookup</button>
+          <span id="batch-status" class="muted"></span>
+        </div>
+        <div id="batch-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Libraries -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.js"></script>
+  <script src="https://unpkg.com/@turf/turf@7.1.0/turf.min.js"></script>
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+
+  <!-- App modules -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
