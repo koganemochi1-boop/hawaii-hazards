@@ -82,15 +82,17 @@ function renderSuggestions(results, query) {
       </div>
     `;
     suggestions.classList.remove('hidden');
+    input.setAttribute('aria-expanded', 'true');
     return;
   }
   suggestions.innerHTML = results.map((r, i) => `
-    <div class="suggestion-item" role="option" data-i="${i}" aria-selected="false">
+    <div class="suggestion-item" role="option" id="suggestion-${i}" data-i="${i}" aria-selected="false">
       <span class="suggestion-name">${escapeHtml(primaryAddressLine(r))}</span>
       <span class="suggestion-context muted">${escapeHtml(secondaryAddressLine(r))}</span>
     </div>
   `).join('');
   suggestions.classList.remove('hidden');
+  input.setAttribute('aria-expanded', 'true');
   suggestions.querySelectorAll('.suggestion-item').forEach((el, i) => {
     el.addEventListener('click', () => chooseResult(currentResults[i]));
     el.addEventListener('mouseenter', () => setSelection(i));
@@ -112,12 +114,19 @@ function setSelection(i) {
     el.classList.toggle('selected', idx === i);
     el.setAttribute('aria-selected', idx === i ? 'true' : 'false');
   });
+  if (i >= 0) {
+    input.setAttribute('aria-activedescendant', `suggestion-${i}`);
+  } else {
+    input.removeAttribute('aria-activedescendant');
+  }
 }
 
 function hideSuggestions() {
   suggestions.classList.add('hidden');
   suggestions.innerHTML = '';
   selectedIndex = -1;
+  input.setAttribute('aria-expanded', 'false');
+  input.removeAttribute('aria-activedescendant');
 }
 
 function chooseResult(r) {
@@ -205,22 +214,49 @@ function inHawaii(lng, lat) {
 }
 
 function primaryAddressLine(r) {
-  // Nominatim's display_name is "1234, Street, Neighborhood, City, County, State, Zip, Country"
-  // We want a cleaner two-line view.
+  // Nominatim's display_name is "1234, Street, Neighborhood, City, County, State, Zip, Country".
+  // We want a cleaner two-line view. The trickiest case: Nominatim populates
+  // `house_number` but leaves `road` empty — the street is only present in
+  // display_name. So fall back to splitting display_name when needed.
   const a = r.address || {};
-  const house = a.house_number ? a.house_number + ' ' : '';
-  const road = a.road || a.pedestrian || a.path || '';
-  if (house || road) return `${house}${road}`.trim();
-  return a.suburb || a.village || a.town || a.city || r.display_name.split(',')[0];
+  const house = a.house_number || '';
+  const road = a.road || a.pedestrian || a.path || a.cycleway || a.footway || '';
+  if (house && road) return `${house} ${road}`;
+  if (road) return road;
+
+  if (house) {
+    // House number is populated but no structured road field — pull the
+    // street name out of display_name (typically "<num>, <street>, ...").
+    const parts = (r.display_name || '').split(',').map(s => s.trim()).filter(Boolean);
+    const i = parts.indexOf(house);
+    if (i !== -1 && parts[i + 1]) return `${house} ${parts[i + 1]}`;
+    return house;
+  }
+
+  return a.suburb || a.village || a.town || a.city
+       || (r.display_name || '').split(',')[0].trim();
 }
 
 function secondaryAddressLine(r) {
   const a = r.address || {};
+  // Build from structured fields where available. Strip country (always
+  // "United States" for Hawaiʻi addresses and noisy in the title).
   const parts = [a.suburb, a.village, a.town || a.city, a.county, a.state, a.postcode]
     .filter(Boolean);
-  // Deduplicate consecutive duplicates (Nominatim sometimes lists suburb == village)
   const dedup = parts.filter((p, i) => p !== parts[i - 1]);
-  return dedup.join(', ') || r.display_name;
+  if (dedup.length) return dedup.join(', ');
+
+  // Fallback: derive from display_name minus the primary line, so we don't
+  // print "Hilo Bayfront Park, Hilo Bayfront Park, ..." or "530, Paulele
+  // Street, Paulele Street, ...". Match loosely on the chunks rather than a
+  // strict prefix, since primaryAddressLine joins with spaces while
+  // display_name uses commas.
+  const primary = primaryAddressLine(r);
+  const dnParts = (r.display_name || '').split(',').map(s => s.trim()).filter(Boolean);
+  const primaryTokens = new Set(primary.split(/\s+/).map(t => t.trim()).filter(Boolean));
+  const remaining = dnParts.filter(p => !primaryTokens.has(p) && p !== 'United States');
+  if (remaining.length) return remaining.join(', ');
+  return dnParts.filter(p => p !== 'United States').join(', ');
 }
 
 function escapeHtml(s) {

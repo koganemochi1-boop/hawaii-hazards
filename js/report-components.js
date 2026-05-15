@@ -89,7 +89,8 @@ function renderHazardCard(summary, { defaultOpen = false } = {}) {
 
   const summaryRow = `
     <summary>
-      <span class="sev-pill ${sevClass}">${escapeHtml(sevLabel)}</span>
+      <span class="sev-pill ${sevClass}" aria-hidden="true">${escapeHtml(sevLabel)}</span>
+      <span class="sr-only">Severity: ${escapeHtml(sevLabel)}.</span>
       <span class="hazard-text">
         <div class="hazard-name">${escapeHtml(summary.hazard.displayName)}</div>
         <div class="hazard-oneliner">${escapeHtml(oneLiner)}</div>
@@ -136,7 +137,8 @@ function renderNotPresentGroup(noneHazards) {
   const names = noneHazards.map(s => s.hazard.shortName).join(', ');
   group.innerHTML = `
     <summary>
-      <span class="sev-pill sev-none">None</span>
+      <span class="sev-pill sev-none" aria-hidden="true">None</span>
+      <span class="sr-only">Severity: none.</span>
       <span class="hazard-text">
         <div class="hazard-name">Not present: ${escapeHtml(names)}</div>
         <div class="hazard-oneliner">These hazards don't apply at this address.</div>

@@ -18,9 +18,16 @@ const HAWAII_BOUNDS = [[-161.0, 18.5], [-154.4, 22.7]];
 
 const reportEl = document.getElementById('report');
 
+function resetReport() {
+  // Clear out the report area but keep the H1 (for accessibility).
+  const h1 = document.getElementById('report-h1');
+  reportEl.innerHTML = '';
+  if (h1) reportEl.appendChild(h1);
+}
+
 bootstrap().catch(err => {
   console.error('[report] fatal:', err);
-  reportEl.innerHTML = '';
+  resetReport();
   reportEl.appendChild(renderInvalidLocation(
     'Something went wrong loading the hazard data. Reload to try again.'
   ));
@@ -36,7 +43,7 @@ async function bootstrap() {
     return showLanding();
   }
   if (!inHawaii(lng, lat)) {
-    reportEl.innerHTML = '';
+    resetReport();
     reportEl.appendChild(renderAddressBar({ addr, lng, lat, onChangeAddress: showLanding }));
     reportEl.appendChild(renderInvalidLocation(
       `That location is outside the main Hawaiian islands. This tool covers Hawaiʻi only.`
@@ -44,8 +51,18 @@ async function bootstrap() {
     return;
   }
 
+  // Update the page H1 and document title so screen readers and the document
+  // outline reflect this specific report.
+  const h1 = document.getElementById('report-h1');
+  if (h1) h1.textContent = addr
+    ? `Hazard report for ${addr}`
+    : `Hazard report for ${lat.toFixed(4)}°N, ${(-lng).toFixed(4)}°W`;
+  document.title = addr
+    ? `${addr} — Hawaiʻi Hazards & Preparedness`
+    : `Hazard report — Hawaiʻi Hazards & Preparedness`;
+
   // Mount header pieces immediately so the page doesn't feel blank.
-  reportEl.innerHTML = '';
+  resetReport();
   reportEl.appendChild(renderAddressBar({ addr, lng, lat, onChangeAddress: showLanding }));
 
   const status = document.createElement('p');
@@ -98,7 +115,8 @@ async function bootstrap() {
   const elapsedMs = Math.round(performance.now() - t0);
   console.log('[report] synthesis took', elapsedMs, 'ms', result);
 
-  // Render the report.
+  // Render the report. (resetReport is not used here because the loading
+  // message is currently in place; we just remove it.)
   status.remove();
   reportEl.appendChild(renderReportActions({
     onPrint: () => window.print(),
