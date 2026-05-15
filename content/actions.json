@@ -1,9 +1,9 @@
 {
   "$schema": "./schemas/actions.schema.json",
-  "version": "0.1.0",
-  "lastReviewedBy": "TBD — pending HI-EMA + Red Cross Hawaiʻi review",
+  "version": "0.2.0",
+  "lastReviewedBy": "draft — pending HI-EMA + Red Cross Hawaiʻi review",
   "lastReviewedDate": null,
-  "notes": "Preparedness action library. Each entry is referenced by ID from content/hazards.json. The synthesis engine deduplicates actions across hazards by `dedupeKey` and groups them by `timeHorizon`. Every action must cite at least one authoritative source.",
+  "notes": "Preparedness action library. Each entry is referenced by ID from content/hazards.json. The synthesis engine deduplicates actions across hazards by `dedupeKey` and groups them by `timeHorizon`. Every action cites at least one authoritative source.",
 
   "actions": [
     {
@@ -76,7 +76,7 @@
       "description": { "en": "A small backpack near your door with: 1 day of water and food per person, copies of IDs, cash, medications for 3 days, a phone charger, a flashlight, and a change of clothes. Designed for evacuations where you have minutes, not hours." },
       "timeHorizon": "right_now",
       "estimatedTime": "1 hour",
-      "hazardIds": ["tsunami", "coastal", "wildfire", "lava"],
+      "hazardIds": ["tsunami", "coastal", "wildfire", "lava", "flood"],
       "appliesToSeverities": ["high"],
       "dedupeKey": "go_bag",
       "sources": [
@@ -92,7 +92,7 @@
       "title": { "en": "Build a 14-day emergency kit" },
       "description": { "en": "Hawaiʻi's official guidance is 14 days of supplies, not the mainland's 3 days, because of our isolation from supply chains. Cover water (1 gallon per person per day), shelf-stable food, medications, batteries, cash, important documents, and a first-aid kit." },
       "timeHorizon": "this_week",
-      "estimatedTime": "2 hours over a weekend",
+      "estimatedTime": "2 hours",
       "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
       "appliesToSeverities": ["low", "moderate", "high"],
       "dedupeKey": "emergency_kit",
@@ -108,7 +108,7 @@
       "description": { "en": "Walk every room with your phone camera, recording video and photos. Open closets and drawers. Store the file in cloud storage. After a disaster you'll need to prove what you owned; memory and paperwork are not enough." },
       "timeHorizon": "this_week",
       "estimatedTime": "1 hour",
-      "hazardIds": ["tsunami", "flood", "coastal", "wildfire"],
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
       "appliesToSeverities": ["moderate", "high"],
       "dedupeKey": "home_inventory",
       "sources": [
@@ -139,7 +139,7 @@
       "timeHorizon": "this_month",
       "estimatedTime": "1 hour",
       "hazardIds": ["flood", "coastal"],
-      "appliesToSeverities": ["moderate", "high"],
+      "appliesToSeverities": ["low", "moderate", "high"],
       "dedupeKey": "flood_insurance",
       "sources": [
         { "label": "FEMA — National Flood Insurance Program",
@@ -152,13 +152,109 @@
       "title": { "en": "Create defensible space around your home" },
       "description": { "en": "Clear dry brush, leaves, and dead vegetation within 30 feet of your house. Keep grass mowed short in dry months. Trim tree branches at least 10 feet from your roof and chimney. This is the single highest-impact thing you can do to reduce your home's wildfire risk." },
       "timeHorizon": "this_month",
-      "estimatedTime": "4 hours initially, ongoing seasonally",
+      "estimatedTime": "4 hours",
       "hazardIds": ["wildfire"],
       "appliesToSeverities": ["moderate", "high"],
       "dedupeKey": "defensible_space",
       "sources": [
         { "label": "Hawaiʻi Wildfire Management Organization — Ready, Set, Go!",
           "url": "https://www.hawaiiwildfire.org/ready-set-go" }
+      ]
+    },
+
+    {
+      "id": "harden_home_for_fire",
+      "title": { "en": "Harden your home against ember ignition" },
+      "description": { "en": "Most homes lost to wildfire ignite from windborne embers, not direct flame. Highest-leverage upgrades: install a Class-A fire-rated roof, screen all roof and foundation vents with 1/8-inch metal mesh, replace flammable mulch with gravel near the house, and remove anything wooden touching the exterior walls (woodpiles, dead plants, doormats)." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "varies — 2 hours to plan, days to execute",
+      "hazardIds": ["wildfire"],
+      "appliesToSeverities": ["high"],
+      "dedupeKey": "home_hardening_fire",
+      "sources": [
+        { "label": "Hawaiʻi WMO — Home Hardening",
+          "url": "https://www.hawaiiwildfire.org/" },
+        { "label": "NFPA Firewise USA",
+          "url": "https://www.nfpa.org/Public-Education/Fire-causes-and-risks/Wildfire/Firewise-USA" }
+      ]
+    },
+
+    {
+      "id": "evaluate_flood_proofing",
+      "title": { "en": "Evaluate flood-proofing options for your home" },
+      "description": { "en": "Talk to your county building department or a licensed contractor about whether your home's mechanical and electrical systems (water heater, washer, dryer, electrical panel) sit above the base flood elevation. Backflow valves on sewer connections, raised utilities, and graded landscaping can substantially reduce damage in a flood." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "1 hour to research, more to implement",
+      "hazardIds": ["flood", "coastal"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "flood_proofing",
+      "sources": [
+        { "label": "FEMA — Homeowner's Guide to Retrofitting",
+          "url": "https://www.fema.gov/sites/default/files/2020-08/FEMA_P-312.pdf" }
+      ]
+    },
+
+    {
+      "id": "prepare_for_hurricane",
+      "title": { "en": "Prepare for hurricane and coastal-storm conditions" },
+      "description": { "en": "In hurricane season (June–November), know which county hurricane refuge serves your area, plan how you would board windows or move outdoor objects indoors, and keep your vehicle fueled in the days a major storm is forecast. Hawaiʻi's last major direct strike was Iniki in 1992." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "2 hours",
+      "hazardIds": ["coastal", "flood"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "hurricane_prep",
+      "sources": [
+        { "label": "Central Pacific Hurricane Center",
+          "url": "https://www.nhc.noaa.gov/cphc/" },
+        { "label": "Red Cross — Hurricane Safety",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/hurricane.html" }
+      ]
+    },
+
+    {
+      "id": "monitor_hvo_updates",
+      "title": { "en": "Subscribe to USGS volcano updates" },
+      "description": { "en": "The USGS Hawaiian Volcano Observatory posts daily and weekly updates on Kīlauea and Mauna Loa. Subscribe to email notifications so you hear about activity changes before you see them on the news. Follow Hawaiʻi County Civil Defense for evacuation guidance." },
+      "timeHorizon": "right_now",
+      "estimatedTime": "5 minutes",
+      "hazardIds": ["lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "hvo_subscription",
+      "sources": [
+        { "label": "USGS — Hawaiian Volcano Observatory",
+          "url": "https://www.usgs.gov/observatories/hvo" },
+        { "label": "USGS Volcano Notification Service",
+          "url": "https://volcanoes.usgs.gov/vns2/" }
+      ]
+    },
+
+    {
+      "id": "make_household_communication_plan",
+      "title": { "en": "Make a household communication plan" },
+      "description": { "en": "Pick an out-of-state contact everyone in your household will call or text if local lines are jammed. Agree on two meeting places — one near home and one outside the neighborhood. Decide who picks up kids from school, and what happens if you're at work and can't reach home." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "communication_plan",
+      "sources": [
+        { "label": "Ready.gov — Make a Plan",
+          "url": "https://www.ready.gov/plan" }
+      ]
+    },
+
+    {
+      "id": "prepare_evacuation_documents",
+      "title": { "en": "Prepare an evacuation document folder" },
+      "description": { "en": "Scan and store in cloud storage: photo IDs and passports, insurance policies, mortgage or rental agreement, medical records and prescriptions, and recent photos of your home. Print one paper copy and keep it with your grab-and-go bag. You'll be glad you did when rebuilding after a major event." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["tsunami", "wildfire", "lava", "coastal"],
+      "appliesToSeverities": ["high"],
+      "dedupeKey": "evacuation_documents",
+      "sources": [
+        { "label": "Ready.gov — Safeguarding Documents",
+          "url": "https://www.ready.gov/financial-preparedness" }
       ]
     }
   ]

@@ -97,9 +97,11 @@
     map.on('load', async () => {
       statusEl.textContent = 'Loading hazards.json + actions.json…';
       try {
+        // Cache-bust content fetches too — content edits are the most common
+        // thing being iterated on while this harness is open.
         const [hazResp, actResp] = await Promise.all([
-          fetch('../content/hazards.json'),
-          fetch('../content/actions.json'),
+          fetch(`../content/hazards.json?v=${v}`),
+          fetch(`../content/actions.json?v=${v}`),
         ]);
         const hazards = await hazResp.json();
         const actions = await actResp.json();
