@@ -32,7 +32,7 @@ export const HAZARDS = [
     id: 'tsunami',
     name: 'Tsunami Evacuation Zones',
     sourceType: 'bundled',
-    url: 'data/tsunami-evac.geojson',
+    url: '../data/tsunami-evac.geojson',
     styleType: 'categorical-fill',
     colorMap: {
       field: 'zone_type',
@@ -75,7 +75,7 @@ export const HAZARDS = [
     id: 'lava',
     name: 'Lava Flow Hazard Zones (USGS)',
     sourceType: 'bundled',
-    url: 'data/lava-zones.geojson',
+    url: '../data/lava-zones.geojson',
     styleType: 'graduated-fill',
     colorMap: {
       field: 'hzone',

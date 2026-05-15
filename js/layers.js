@@ -71,8 +71,11 @@ export class LayerManager {
 
   async _loadBundled(hazard) {
     if (this.bundledData.has(hazard.id)) return this.bundledData.get(hazard.id);
-    const res = await fetch(hazard.url);
-    if (!res.ok) throw new Error(`Failed to load ${hazard.url}: ${res.status}`);
+    // Resolve bundled paths against this module's own URL so they work no
+    // matter which page is calling (root index.html, /dev/ harness, etc.).
+    const url = new URL(hazard.url, import.meta.url).href;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
     const data = await res.json();
     this.bundledData.set(hazard.id, data);
     this._updateCounter(hazard.id, data.features?.length || 0);
