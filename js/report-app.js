@@ -199,18 +199,9 @@ function inHawaii(lng, lat) {
 }
 
 function showLanding() {
-  // No landing page yet (Step 4). Show the dev-mode message and clear params.
-  history.replaceState(null, '', 'report.html');
-  reportEl.innerHTML = '';
-  const el = document.createElement('section');
-  el.className = 'report-section';
-  el.innerHTML = `
-    <h2 class="section-title">Enter an address</h2>
-    <p>The landing page with address search is coming in the next iteration.</p>
-    <p>For now, pick a sample address from the footer to see a report.</p>
-  `;
-  reportEl.appendChild(el);
-  wireSampleAddresses();
+  // Navigate to the landing page (which IS index.html). Anything still in
+  // the report URL is dropped.
+  window.location.href = './';
 }
 
 function wireSampleAddresses() {
