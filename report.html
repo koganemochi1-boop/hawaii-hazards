@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="See the natural hazards that could affect your Hawaiʻi home, and what to do about them." />
+  <title>Hawaiʻi Hazards & Preparedness — Your Report</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="css/report.css" />
+</head>
+<body>
+  <header id="app-header">
+    <a href="report.html" class="brand">
+      <span class="brand-mark">⟁</span>
+      <span class="brand-name">Hawaiʻi Hazards <span class="brand-sub">&amp; Preparedness</span></span>
+    </a>
+  </header>
+
+  <main id="report" aria-live="polite">
+    <section id="report-skeleton" aria-busy="true">
+      <p class="muted">Looking up the natural hazards at this address…</p>
+    </section>
+  </main>
+
+  <footer id="app-footer">
+    <p class="footer-line">
+      <strong>For planning awareness only.</strong>
+      This is not an official alert source. In an emergency, follow guidance from
+      HI-EMA, your county civil defense, and broadcast media.
+    </p>
+    <p class="footer-line muted">
+      Data sources: State of Hawaiʻi Statewide GIS, FEMA NFHL, NOAA,
+      USGS Hawaiian Volcano Observatory, Hawaiʻi Wildfire Management Organization.
+    </p>
+    <p class="footer-line dev-only">
+      <strong>Dev mode.</strong> No landing page yet — try a sample:
+      <a class="sample" data-lng="-157.826" data-lat="21.276" data-addr="Waikīkī Beach, Honolulu">Waikīkī</a> ·
+      <a class="sample" data-lng="-156.677" data-lat="20.871" data-addr="Lahaina, Maui">Lahaina</a> ·
+      <a class="sample" data-lng="-155.283" data-lat="19.421" data-addr="Kīlauea summit, Hawaiʻi Island">Kīlauea</a> ·
+      <a class="sample" data-lng="-157.974" data-lat="21.395" data-addr="Pearl City, Oʻahu">Pearl City</a> ·
+      <a class="sample" data-lng="-159.484" data-lat="22.218" data-addr="Princeville, Kauaʻi">Princeville</a>
+    </p>
+  </footer>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@turf/turf@7.1.0/turf.min.js"></script>
+
+  <!-- v2 entry point -->
+  <script type="module">
+    const v = Date.now();
+    await import(`./js/report-app.js?v=${v}`);
+  </script>
+</body>
+</html>
