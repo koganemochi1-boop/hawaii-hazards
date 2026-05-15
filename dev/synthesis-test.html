@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Synthesis engine — inspection</title>
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <style>
+    :root { --ink: #1a2233; --muted: #5a6478; --border: #e3e6ec;
+            --high: #c0392b; --moderate: #e67e22; --low: #f1c40f; --none: #95a5a6;
+            --bg: #f7f8fa; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: var(--bg); }
+    header { padding: 12px 18px; background: white; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 15px; }
+    header .meta { font-size: 11px; color: var(--muted); }
+    main { padding: 16px; max-width: 1200px; margin: 0 auto; }
+    .case { background: white; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; }
+    .case-head { padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .case-head h2 { margin: 0; font-size: 14px; }
+    .case-head .coord { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--muted); }
+    .case-body { padding: 12px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 800px) { .case-body { grid-template-columns: 1fr; } }
+    section h3 { margin: 0 0 6px; font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: 0.04em; }
+    .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; color: white; text-transform: uppercase; }
+    .sev-high { background: var(--high); }
+    .sev-moderate { background: var(--moderate); color: #4a2900; }
+    .sev-low { background: var(--low); color: #4a3a00; }
+    .sev-none { background: var(--none); }
+    .sev-unavailable { background: #663300; }
+    .sev-content-gap { background: #6b21a8; }
+    .hazard-row { display: flex; gap: 8px; align-items: baseline; padding: 4px 0; border-bottom: 1px dotted var(--border); }
+    .hazard-row .name { flex: 1; font-weight: 500; }
+    .hazard-row .label { color: var(--muted); font-size: 12px; }
+    .action-group { margin-bottom: 8px; }
+    .action-group h4 { margin: 6px 0 4px; font-size: 12px; }
+    .action-row { padding: 4px 0; border-bottom: 1px dotted var(--border); font-size: 12px; }
+    .action-row .title { font-weight: 500; }
+    .action-row .meta { color: var(--muted); font-size: 11px; }
+    .action-row .hazards { display: inline-block; padding: 1px 6px; background: var(--bg); border-radius: 4px; font-size: 10px; color: var(--muted); margin-left: 6px; }
+    .overall { font-size: 18px; font-weight: 700; }
+    .timing { font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+    .status-msg { padding: 12px; background: white; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; font-size: 12px; }
+    pre.raw { max-height: 200px; overflow: auto; background: #1f2937; color: #e0e7ef; padding: 8px; border-radius: 4px; font-size: 11px; }
+    details > summary { cursor: pointer; color: var(--muted); font-size: 11px; margin-top: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Synthesis engine — inspection</h1>
+    <span class="meta">v2.0.0 development · runs <code>synthesize()</code> against fixed addresses · open the browser console for full output</span>
+  </header>
+
+  <main>
+    <div id="status" class="status-msg">Loading layer manager and content…</div>
+    <div id="cases"></div>
+  </main>
+
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@turf/turf@7.1.0/turf.min.js"></script>
+
+  <script type="module">
+    // Dev harness — cache-bust imports so refreshing this page picks up
+    // edits to ../js/* without restarting the server.
+    const v = Date.now();
+    const { LayerManager } = await import(`../js/layers.js?v=${v}`);
+    const { synthesize, localized } = await import(`../js/synthesis.js?v=${v}`);
+
+    // Fixed inspection cases, picked to exercise distinct hazard combinations.
+    const CASES = [
+      { name: 'Waikīkī Beach',         lngLat: [-157.826, 21.276] },
+      { name: 'Aloha Tower',           lngLat: [-157.866, 21.307] },
+      { name: 'Downtown Hilo',         lngLat: [-155.080, 19.725] },
+      { name: 'Lahaina, Maui',         lngLat: [-156.677, 20.871] },
+      { name: 'Kīlauea summit',        lngLat: [-155.283, 19.421] },
+      { name: 'Princeville, Kauaʻi',   lngLat: [-159.484, 22.218] },
+      { name: 'Pearl City, Oʻahu',     lngLat: [-157.974, 21.395] },
+      { name: 'Mauna Kea summit',      lngLat: [-155.471, 19.821] },
+    ];
+
+    const statusEl = document.getElementById('status');
+    const casesEl = document.getElementById('cases');
+
+    // We need a real MapLibre Map for LayerManager to attach to.
+    // It can be hidden — the synthesis engine doesn't render.
+    const hidden = document.createElement('div');
+    hidden.style.cssText = 'width:1px;height:1px;position:absolute;visibility:hidden';
+    document.body.appendChild(hidden);
+
+    const map = new maplibregl.Map({
+      container: hidden,
+      style: { version: 8, sources: {}, layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#fff' } }] },
+      center: [-157, 21], zoom: 6,
+    });
+
+    let layerManager, content;
+
+    map.on('load', async () => {
+      statusEl.textContent = 'Loading hazards.json + actions.json…';
+      try {
+        // Cache-bust content fetches too — content edits are the most common
+        // thing being iterated on while this harness is open.
+        const [hazResp, actResp] = await Promise.all([
+          fetch(`../content/hazards.json?v=${v}`),
+          fetch(`../content/actions.json?v=${v}`),
+        ]);
+        const hazards = await hazResp.json();
+        const actions = await actResp.json();
+        content = { hazards: hazards.hazards, actions: actions.actions };
+
+        layerManager = new LayerManager(map);
+
+        statusEl.textContent = `Running synthesize() against ${CASES.length} addresses…`;
+        await runAll();
+        statusEl.textContent = `Done. ${CASES.length} addresses synthesized. Open the browser console for full result objects.`;
+      } catch (e) {
+        statusEl.style.color = '#c0392b';
+        statusEl.textContent = `Error: ${e.message}`;
+        console.error(e);
+      }
+    });
+
+    async function runAll() {
+      for (const c of CASES) {
+        const t0 = performance.now();
+        const result = await synthesize(c.lngLat, layerManager, content);
+        const ms = Math.round(performance.now() - t0);
+        console.log(`[synthesis] ${c.name}:`, result);
+        casesEl.appendChild(renderCase(c, result, ms));
+      }
+    }
+
+    function renderCase(testCase, result, ms) {
+      const el = document.createElement('div');
+      el.className = 'case';
+
+      const sevClass = `sev-${result.overall}`;
+      el.innerHTML = `
+        <div class="case-head">
+          <h2>${escapeHtml(testCase.name)}</h2>
+          <span class="coord">${testCase.lngLat[1].toFixed(4)}°N, ${(-testCase.lngLat[0]).toFixed(4)}°W <span class="timing">· ${ms}ms</span></span>
+        </div>
+        <div class="case-body">
+          <section>
+            <h3>Overall risk · <span class="badge ${sevClass}">${result.overall}</span></h3>
+            ${renderHazards(result.hazardSummaries)}
+          </section>
+          <section>
+            <h3>Action plan</h3>
+            ${renderPlan(result.plan)}
+            <details><summary>Raw result JSON</summary><pre class="raw">${escapeHtml(safeStringify(result))}</pre></details>
+          </section>
+        </div>
+      `;
+      return el;
+    }
+
+    function renderHazards(summaries) {
+      return summaries.map(s => {
+        let sevClass, sevLabel, labelText;
+        if (s.status === 'unavailable') {
+          sevClass = 'sev-unavailable';
+          sevLabel = 'unavailable';
+          labelText = s.error || '—';
+        } else if (s.status === 'ok_unmatched_zone') {
+          sevClass = 'sev-content-gap';
+          sevLabel = 'content gap';
+          // Show the actual feature props so the content author knows what to map
+          const props = s.matchedFeature?.properties || {};
+          labelText = 'feature matched but no zone rule defined: ' + JSON.stringify(props).slice(0, 120);
+        } else {
+          sevClass = `sev-${s.severity}`;
+          sevLabel = s.severity;
+          labelText = localized(s.zone?.label) || '—';
+        }
+        return `
+          <div class="hazard-row">
+            <span class="badge ${sevClass}">${escapeHtml(sevLabel)}</span>
+            <span class="name">${escapeHtml(s.hazard.shortName)}</span>
+            <span class="label">${escapeHtml(labelText)}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPlan(plan) {
+      const horizons = [
+        ['right_now', 'Right Now'],
+        ['this_week', 'This Week'],
+        ['this_month', 'This Month / Ongoing'],
+      ];
+      let html = '';
+      for (const [key, label] of horizons) {
+        const items = plan[key] || [];
+        if (items.length === 0) continue;
+        html += `<div class="action-group"><h4>${label} (${items.length})</h4>`;
+        for (const entry of items) {
+          const hazardsList = [...entry.hazards].join(', ');
+          html += `
+            <div class="action-row">
+              <div><span class="title">${escapeHtml(localized(entry.action.title))}</span>
+                <span class="hazards">${escapeHtml(hazardsList)}</span></div>
+              <div class="meta">${escapeHtml(entry.action.estimatedTime || '')}</div>
+            </div>
+          `;
+        }
+        html += '</div>';
+      }
+      if (!html) html = '<div class="meta">(no actions match)</div>';
+      return html;
+    }
+
+    function safeStringify(obj) {
+      return JSON.stringify(obj, (k, v) => {
+        if (v instanceof Set) return [...v];
+        if (k === 'matchedFeature' && v) {
+          // strip geometry to keep the dump small
+          return { properties: v.properties, _hint: 'geometry stripped' };
+        }
+        if (k === 'hazard' && v && typeof v === 'object') {
+          // strip the verbose hazard config from the dump (keep just the id)
+          return { id: v.id, shortName: v.shortName };
+        }
+        return v;
+      }, 2);
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hazards.schema.json",
+  "title": "Hazard translation table",
+  "description": "Maps each hazard's technical zones to resident-facing severity, plain language, and action references.",
+  "type": "object",
+  "required": ["version", "hazards"],
+  "properties": {
+    "$schema":         { "type": "string" },
+    "version":         { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "lastReviewedBy":  { "type": ["string", "null"] },
+    "lastReviewedDate":{ "type": ["string", "null"] },
+    "notes":           { "type": "string" },
+    "hazards":         { "type": "array", "items": { "$ref": "#/$defs/hazard" } }
+  },
+
+  "$defs": {
+    "severity": {
+      "enum": ["none", "low", "moderate", "high"],
+      "description": "Resident-facing severity band. `none` means the hazard does not apply at this address."
+    },
+
+    "localizedString": {
+      "type": "object",
+      "required": ["en"],
+      "properties": { "en": { "type": "string", "minLength": 1 } },
+      "additionalProperties": { "type": "string" },
+      "description": "Localized text keyed by ISO 639-1 language code. `en` is required; additional locales optional."
+    },
+
+    "matchRule": {
+      "type": "object",
+      "required": ["field", "equals"],
+      "properties": {
+        "field":  { "type": "string", "description": "GeoJSON feature property to test." },
+        "equals": { "type": "string", "description": "Value to match exactly (case-sensitive)." }
+      },
+      "additionalProperties": false
+    },
+
+    "source": {
+      "type": "object",
+      "required": ["label", "url"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "url":   { "type": "string", "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+
+    "zone": {
+      "type": "object",
+      "required": ["match", "severity", "label", "oneLiner", "plainExplanation", "actionIds"],
+      "properties": {
+        "match":              { "$ref": "#/$defs/matchRule" },
+        "severity":           { "$ref": "#/$defs/severity" },
+        "label":              { "$ref": "#/$defs/localizedString" },
+        "oneLiner":           { "$ref": "#/$defs/localizedString" },
+        "plainExplanation":   { "$ref": "#/$defs/localizedString" },
+        "probabilityFraming": { "oneOf": [{ "$ref": "#/$defs/localizedString" }, { "type": "null" }] },
+        "technicalCode":      { "type": "string" },
+        "actionIds":          { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+
+    "noMatchBlock": {
+      "type": "object",
+      "required": ["severity", "label", "oneLiner", "plainExplanation", "actionIds"],
+      "properties": {
+        "severity":           { "$ref": "#/$defs/severity" },
+        "label":              { "$ref": "#/$defs/localizedString" },
+        "oneLiner":           { "$ref": "#/$defs/localizedString" },
+        "plainExplanation":   { "$ref": "#/$defs/localizedString" },
+        "actionIds":          { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      },
+      "additionalProperties": false
+    },
+
+    "dataProvenance": {
+      "type": "object",
+      "properties": {
+        "service":              { "type": "string" },
+        "spatialAttribution":   { "type": "string" },
+        "lastDownloaded":       { "type": ["string", "null"] },
+        "refreshCadence":       { "type": "string", "description": "annual | live | rare | one-off" }
+      }
+    },
+
+    "hazard": {
+      "type": "object",
+      "required": [
+        "id", "displayName", "shortName", "spatialKey",
+        "zones", "noMatch", "authoritativeSources", "dataProvenance"
+      ],
+      "properties": {
+        "id":                   { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+        "displayName":          { "type": "string" },
+        "shortName":            { "type": "string" },
+        "iconKey":              { "type": "string" },
+        "spatialKey":           { "type": "string", "description": "Must match a hazard id in js/config.js HAZARDS." },
+        "sortHint":             { "type": "integer" },
+        "zones":                { "type": "array", "items": { "$ref": "#/$defs/zone" } },
+        "noMatch":              { "$ref": "#/$defs/noMatchBlock" },
+        "authoritativeSources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+        "dataProvenance":       { "$ref": "#/$defs/dataProvenance" },
+        "_TODO":                { "type": "string", "description": "Optional content-author note. Validator warns when present." }
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hawaiʻi Natural Hazards Map</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header id="app-header">
+    <div class="brand">
+      <button id="btn-toggle-sidebar" class="hamburger" aria-label="Toggle sidebar">☰</button>
+      <h1>Hawaiʻi Natural Hazards</h1>
+      <span class="subtitle">Interactive multi-hazard viewer</span>
+    </div>
+    <div class="header-actions">
+      <input id="geocoder-input" type="search" placeholder="Search address or place…" autocomplete="off" />
+      <div id="geocoder-results" class="geocoder-results hidden"></div>
+      <select id="quick-jump" class="btn" title="Jump to a notable Hawaiʻi location"></select>
+      <button id="btn-home" class="btn" title="Reset view to all Hawaiian Islands">⌂ Home</button>
+      <button id="btn-locate" class="btn" title="Zoom to my location (requires browser permission)">◉ Me</button>
+      <button id="btn-share" class="btn" title="Copy a shareable link to this view">Share</button>
+      <button id="btn-export-png" class="btn" title="Export current map view as PNG">PNG</button>
+      <button id="btn-export-pdf" class="btn" title="Export current map view as PDF">PDF</button>
+    </div>
+  </header>
+
+  <aside id="sidebar" aria-label="Map controls">
+    <section class="panel" id="panel-layers" aria-labelledby="panel-layers-heading">
+      <h2 id="panel-layers-heading">
+        Hazard Layers
+        <button id="btn-clear-layers" class="link-btn" title="Turn off all layers">clear all</button>
+      </h2>
+      <div id="layer-list" role="group" aria-label="Hazard layer toggles"></div>
+    </section>
+
+    <section class="panel" id="panel-tools">
+      <h2>Tools</h2>
+      <button id="btn-point-query" class="tool-btn">
+        <span class="icon">◎</span> What's at this location?
+      </button>
+      <button id="btn-draw" class="tool-btn">
+        <span class="icon">▱</span> Draw area &amp; summarize
+      </button>
+      <button id="btn-batch" class="tool-btn">
+        <span class="icon">▤</span> Batch CSV lookup
+      </button>
+      <button id="btn-measure" class="tool-btn">
+        <span class="icon">↔</span> Measure distance
+      </button>
+    </section>
+
+    <section class="panel" id="panel-legend">
+      <h2>Legend</h2>
+      <div id="legend-list"><p class="muted">Turn on layers to see legend entries.</p></div>
+    </section>
+
+    <section class="panel attribution">
+      <h2>About</h2>
+      <p>
+        <button id="btn-info" class="link-btn">Data sources, disclaimer, &amp; methodology →</button>
+      </p>
+      <p class="muted">For planning awareness only — not for regulatory determination.</p>
+    </section>
+  </aside>
+
+  <main id="map" role="application" aria-label="Hawaiʻi natural hazards map"></main>
+
+  <!-- Result overlay panels (hidden until used) -->
+  <div id="result-panel" class="result-panel hidden">
+    <div class="result-header">
+      <h3 id="result-title">Result</h3>
+      <button class="close-btn" data-close="result-panel" aria-label="Close">×</button>
+    </div>
+    <div id="result-body" class="result-body"></div>
+  </div>
+
+  <div id="batch-panel" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Batch CSV Lookup</h3>
+        <button class="close-btn" data-close="batch-panel" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="muted">
+          Paste addresses (one per line), or a CSV with either an <code>address</code> column
+          or <code>lat</code>+<code>lng</code> columns. lat/lng rows skip geocoding and are
+          much faster. Each row is scored against every hazard.
+        </p>
+        <textarea id="batch-input" placeholder="123 Main St, Honolulu HI&#10;456 Beach Rd, Lahaina HI&#10;&#10;# or:&#10;lat,lng,label&#10;21.276,-157.826,Waikiki"></textarea>
+        <div class="modal-actions">
+          <input id="batch-file" type="file" accept=".csv,.txt" style="display:none" />
+          <button id="btn-batch-upload" class="btn" title="Load a .csv file">Load CSV…</button>
+          <button id="btn-batch-run" class="btn primary">Run lookup</button>
+          <span id="batch-status" class="muted"></span>
+        </div>
+        <div id="batch-results"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-modal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>About this map</h3>
+        <button class="close-btn" data-close="info-modal" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <h4>Hazard layers &amp; sources</h4>
+        <ul style="padding-left:18px;line-height:1.55">
+          <li><strong>FEMA Flood Zones (DFIRM)</strong> — State of Hawaiʻi Statewide GIS, <em>Hazards/MapServer/6</em>. Live ArcGIS REST query (zoom ≥ 10).</li>
+          <li><strong>Wildfire Risk Areas</strong> — State of Hawaiʻi Statewide GIS, <em>Hazards/MapServer/7</em>. Live ArcGIS REST query.</li>
+          <li><strong>Sea Level Rise + 1% Coastal Flood (3.2 ft)</strong> — <em>Hazards/MapServer/15</em>. Live ArcGIS REST.</li>
+          <li><strong>Tsunami Evacuation Zones</strong> — bundled GeoJSON from <em>Hazards/MapServer/11</em>.</li>
+          <li><strong>Lava Flow Hazard Zones</strong> (USGS 1–9) — bundled GeoJSON from <em>Hazards/MapServer/3</em>.</li>
+        </ul>
+
+        <h4>A note on hurricane storm surge</h4>
+        <p>
+          Hawaiʻi does not publish SLOSH-style hurricane storm-surge vector data.
+          The combined "1% coastal flood + 3.2 ft sea level rise" layer is used here as the de facto
+          coastal storm hazard scenario. Tsunami evacuation zones serve as the practical
+          coastal evacuation framework during hurricanes per Hawaiʻi emergency management.
+        </p>
+
+        <h4>Composite risk score</h4>
+        <p>
+          Each layer contributes a weight × hit-score (0 to 1) to a composite. Weights:
+          Lava 0.25, Tsunami 0.20, DFIRM 0.20, SLR + Coastal Flood 0.20, Wildfire 0.15.
+          Buckets: 0–0.15 Low, 0.15–0.35 Moderate, 0.35–0.60 High, 0.60–0.85 Severe, 0.85+ Extreme.
+        </p>
+
+        <h4>Disclaimer</h4>
+        <p>
+          This map is for <strong>planning awareness only</strong>. It is not a substitute for
+          official FEMA flood determinations, USGS lava hazard products, NOAA / Hawaiʻi sea-level
+          rise scenarios, county tsunami evacuation orders, or emergency-management decisions.
+          Geometries are simplified server-side for performance and may not match authoritative
+          maps at the parcel scale.
+        </p>
+
+        <p class="muted" style="font-size:11px">
+          Geocoding: © OpenStreetMap / Nominatim contributors.
+          Basemap tiles: © OpenStreetMap contributors.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Libraries -->
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="https://unpkg.com/@mapbox/mapbox-gl-draw@1.4.3/dist/mapbox-gl-draw.js"></script>
+  <script src="https://unpkg.com/@turf/turf@7.1.0/turf.min.js"></script>
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+
+  <!-- App modules -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
