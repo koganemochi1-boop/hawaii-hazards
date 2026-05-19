@@ -15,9 +15,9 @@ Update this file when:
 
 ## Snapshot — current state
 
-- **Latest tag:** `v2.0.0` (synthesis report). Tagged 2026-05-14.
-- **Default branch:** `main` at commit `266a9f0`.
-- **Active branch:** `v2.1-household-profile` (created for the next phase; ROADMAP-only commit on it so far).
+- **Latest tag:** `v2.1.0` (household profile).
+- **Default branch:** `main`.
+- **Active branch:** none — `v2.1-household-profile` merged to `main`. Next phase will create a new working branch from main HEAD.
 - **Deployed:**
   - Live site: https://koganemochi1-boop.github.io/hawaii-hazards/
   - Repo: https://github.com/koganemochi1-boop/hawaii-hazards
@@ -34,15 +34,14 @@ Interactive MapLibre map of all 8 main Hawaiian islands with five hazard layers 
 ### v2.0.0 — Synthesis report *(May 2026)*
 Pivot from GIS viewer to a resident-facing risk-communication tool. Address-first landing page (Nominatim typeahead). Per-address synthesis report with overall risk tile, collapsible plain-language hazard cards, deduplicated three-horizon preparedness action plan (4/6/8 cap), supporting map with severity-colored layers. Content layer (`content/hazards.json`, `content/actions.json`) with JSON schemas, Node validator, and a style guide so a non-developer can extend or revise. WCAG-AA-aware (skip links, combobox ARIA, dynamic H1, screen-reader severity announce). Mobile-first. Full detail in CHANGELOG.
 
+### v2.1.0 — Household profile *(May 2026)*
+Optional client-side household profile (people, ages, pets, mobility, medical, vehicle, language, home type, tenure) that personalizes the action plan. Filter-based architecture: each action gains an optional `requirements` block (e.g. `{ "hasInfant": true }`); the synthesis engine reads the saved profile, derives boolean flags via `profileFlags()`, and gates actions whose requirements don't match. Profile stored in `localStorage` only; never transmitted, never in the URL hash. 9 new profile-gated actions added, plus `isOwner` gating on two existing homeowner-only actions. A *For your household* badge marks personalized entries on the report. Full detail in CHANGELOG.
+
 ---
 
 ## Active work
 
-**Branch:** `v2.1-household-profile`
-
-Adds an optional client-side household profile (people, ages, pets, mobility, medical, vehicle, language, home type, tenure) that personalizes the action plan. Stored in `localStorage` only; never transmitted. The synthesis engine reads profile flags to gate which actions surface. See "v2.1 — household profile" below.
-
-Evacuation routing (originally planned for v2.1) has been deferred to v2.2.
+No working branch is currently open. The next phase will branch from `main` HEAD.
 
 ---
 
@@ -58,31 +57,7 @@ These are not version bumps — they are quality gates on the existing v2.0.0 de
 4. **Tag a `v2.0.1` patch with the reviewed content.** Mark content as `lastReviewedBy: "HI-EMA, <date>"` etc. This is the version we point partners at.
 5. **Optional: a small group of trusted Hawaiʻi residents user-test the site on phones.** Capture confusion, broken expectations, language that doesn't read right. Iterate.
 
-### v2.1 — Household profile *(current next phase)*
-
-Adds an **optional** client-side household profile that personalizes the action plan. The synthesis engine gates which actions surface based on profile flags. Client-side storage only — no server, no PII transmission, never in the URL hash.
-
-**Profile fields (all optional):**
-
-- Household size (number)
-- Ages present (multi-select: infant / young child / school-age / teen / adult / senior)
-- Pets (multi-select: dog / cat / other) + count
-- Mobility assistance needs (none / walking aid / wheelchair / non-ambulatory)
-- Power-dependent medical needs (multi-select: oxygen / dialysis / refrigerated meds / CPAP)
-- Vehicle access (own / shared / none)
-- Preferred language (English / Filipino / Japanese / Korean / Hawaiian / Marshallese / Ilocano / Tongan / Samoan / Spanish / Other)
-- Home type (single-family / apartment / condo / multi-unit)
-- Renter or owner
-
-**Architecture: filter-based.** Each action gains an optional `requirements` block (e.g., `{ "hasInfant": true }`). The synthesis engine reads `localStorage` profile, derives boolean flags, and filters actions whose requirements aren't all matched. Profile-less reports behave exactly as today.
-
-**UX: inline on the report.** A "Personalize this report" expander above the action plan reveals the form; saving re-renders in place. A "Personalized for: …" pill shows when active. A visible "Forget my household details" button always present.
-
-**Storage: `localStorage`** under `hi-hazards/household-profile-v1`. Privacy line on the form. URL hash explicitly excludes the profile.
-
-**New content:** ~9 new profile-gated actions covering infant kit, pet evacuation, special-needs registry, mobility-equipment plans, no-vehicle evacuation, renters / multi-unit guidance. Plus a per-county special-needs-registry-link list (see open decisions).
-
-### v2.2 — Evacuation routes *(deferred from v2.1)*
+### v2.2 — Evacuation routes *(current next phase)*
 
 Adds walking + driving routes from the user's address to the nearest appropriate evacuation destination. Phase scope:
 
