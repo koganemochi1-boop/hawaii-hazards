@@ -81,6 +81,7 @@ for (const a of actions.actions) {
     if (!s.label || !s.url) err(`Action ${a.id}: source missing label/url`);
     if (s.url && !/^https?:\/\//.test(s.url)) err(`Action ${a.id}: source url is not http(s) — ${s.url}`);
   }
+  if (a._TODO) warn(`Action ${a.id}: has _TODO — ${a._TODO}`);
   if (a.requirements !== undefined) {
     if (typeof a.requirements !== 'object' || Array.isArray(a.requirements) || a.requirements === null) {
       err(`Action ${a.id}: requirements must be an object`);
