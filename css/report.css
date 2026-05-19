@@ -308,6 +308,25 @@ html, body {
   font-size: 14px;
   line-height: 1.35;
 }
+
+.action-item.personalized {
+  border-left: 3px solid var(--accent);
+  padding-left: 10px;
+}
+.personalized-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+  cursor: help;
+}
 .action-item .description {
   font-size: 13px;
   color: var(--ink-soft);

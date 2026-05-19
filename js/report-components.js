@@ -198,19 +198,25 @@ function renderHorizonGroup(horizonKey, items) {
 }
 
 function renderActionItem(entry) {
-  const { action, hazards } = entry;
+  const { action, hazards, matchedRequirements } = entry;
   const item = document.createElement('div');
-  item.className = 'action-item';
+  item.className = 'action-item' + (matchedRequirements ? ' personalized' : '');
 
   const hazardBadges = [...hazards].map(h => `<span class="badge">${escapeHtml(h)}</span>`).join(' ');
   const sources = (action.sources || [])
     .map(s => `<a href="${escapeHtml(s.url)}" target="_blank" rel="noopener">${escapeHtml(s.label)}</a>`)
     .join(' · ');
 
+  // The personalized badge tells the resident "this action surfaced because of
+  // your household profile" so they can audit why something appeared.
+  const personalizedBadge = matchedRequirements
+    ? `<span class="personalized-badge" title="This action is here because of your household profile.">For your household</span>`
+    : '';
+
   item.innerHTML = `
     <input type="checkbox" aria-label="${escapeHtml(localized(action.title))}" />
     <div>
-      <div class="title">${escapeHtml(localized(action.title))}</div>
+      <div class="title">${escapeHtml(localized(action.title))} ${personalizedBadge}</div>
       <div class="description">${escapeHtml(localized(action.description))}</div>
       <div class="meta">
         ${hazardBadges}
