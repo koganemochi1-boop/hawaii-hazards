@@ -1,15 +1,23 @@
 // Synthesis engine — given an address point, returns a per-hazard summary
 // (severity + zone copy) and a deduplicated, prioritized action plan.
 //
-//   synthesize(lngLat, layerManager, content) -> {
+//   synthesize(lngLat, layerManager, content, { profile }) -> {
 //     hazardSummaries: [{ hazardId, hazard, zone, severity, status, matchedFeature, error? }, ...],
 //     overall: 'none' | 'low' | 'moderate' | 'high',
 //     plan: {
 //       right_now:  [{ action, hazards: Set<hazardId>, maxSeverity }, ...],
 //       this_week:  [...],
 //       this_month: [...],
-//     }
+//     },
+//     profileFlags: { hasInfant: bool, hasPet: bool, ... }
 //   }
+//
+// `profile` is the household-profile object from js/profile.js (or null/undefined
+// for a non-personalized report). The engine derives boolean flags via
+// profileFlags() and filters actions whose `requirements` block does not match.
+// Actions without a `requirements` block always pass the gate.
+
+import { profileFlags } from './profile.js';
 
 const SEVERITY_RANK = { none: 0, low: 1, moderate: 2, high: 3 };
 
@@ -26,13 +34,15 @@ export const ACTION_LIMITS = {
   this_month: 8,
 };
 
-export async function synthesize(lngLat, layerManager, content) {
+export async function synthesize(lngLat, layerManager, content, options = {}) {
   if (!Array.isArray(content?.hazards)) {
     throw new Error('synthesize: content.hazards is required');
   }
   if (!Array.isArray(content?.actions)) {
     throw new Error('synthesize: content.actions is required');
   }
+
+  const flags = profileFlags(options.profile || null);
 
   const hazardSummaries = await Promise.all(
     content.hazards.map(hazard => evaluateHazard(hazard, lngLat, layerManager))
@@ -41,9 +51,15 @@ export async function synthesize(lngLat, layerManager, content) {
   hazardSummaries.sort(bySeverityThenSortHint);
 
   const overall = maxSeverity(hazardSummaries);
-  const plan = buildActionPlan(hazardSummaries, content.actions);
+  const plan = buildActionPlan(hazardSummaries, content.actions, flags);
 
-  return { hazardSummaries, overall, plan, queriedAt: new Date().toISOString() };
+  return {
+    hazardSummaries,
+    overall,
+    plan,
+    profileFlags: flags,
+    queriedAt: new Date().toISOString(),
+  };
 }
 
 // -- Per-hazard evaluation -------------------------------------------------
@@ -160,9 +176,9 @@ function maxSeverity(summaries) {
 
 // -- Action plan -----------------------------------------------------------
 
-function buildActionPlan(hazardSummaries, actions) {
+function buildActionPlan(hazardSummaries, actions, flags) {
   const actionsById = new Map(actions.map(a => [a.id, a]));
-  // dedupeKey -> { action, hazards: Set, maxSeverityRank }
+  // dedupeKey -> { action, hazards: Set, maxSeverityRank, matchedRequirements: boolean }
   const merged = new Map();
 
   for (const summary of hazardSummaries) {
@@ -183,6 +199,11 @@ function buildActionPlan(hazardSummaries, actions) {
         if (!action.appliesToSeverities?.includes(summary.severity)) continue;
       }
 
+      // Profile requirements gate: every listed flag must match the household
+      // profile (true = required-present, false = required-absent). Actions
+      // without a requirements block always pass.
+      if (!meetsRequirements(action, flags)) continue;
+
       const key = action.dedupeKey || action.id;
       const entry = merged.get(key);
       const rank = SEVERITY_RANK[summary.severity] ?? 0;
@@ -191,6 +212,7 @@ function buildActionPlan(hazardSummaries, actions) {
           action,
           hazards: new Set([summary.hazardId]),
           maxSeverityRank: rank,
+          matchedRequirements: action.requirements != null && Object.keys(action.requirements).length > 0,
         });
       } else {
         entry.hazards.add(summary.hazardId);
@@ -212,6 +234,22 @@ function buildActionPlan(hazardSummaries, actions) {
   }
 
   return plan;
+}
+
+/**
+ * True if the action's requirements block is satisfied by the household
+ * profile flags. Action with no requirements always passes. Flag set to
+ * true means "household must have it"; flag set to false means
+ * "household must lack it."
+ */
+function meetsRequirements(action, flags) {
+  const req = action.requirements;
+  if (!req || typeof req !== 'object') return true;
+  for (const [flag, required] of Object.entries(req)) {
+    const have = !!flags?.[flag];
+    if (have !== required) return false;
+  }
+  return true;
 }
 
 function byPlanRank(a, b) {

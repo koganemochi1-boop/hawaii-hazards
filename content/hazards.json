@@ -4,7 +4,6 @@
   "lastReviewedBy": "draft — pending HI-EMA + Red Cross Hawaiʻi review",
   "lastReviewedDate": null,
   "notes": "Plain-language translation table mapping each hazard's technical zones to resident-facing severity, explanations, and action references. See docs/content-style-guide.md before editing. All content is draft pending review.",
-
   "hazards": [
     {
       "id": "tsunami",
@@ -13,15 +12,25 @@
       "iconKey": "wave",
       "spatialKey": "tsunami",
       "sortHint": 10,
-
       "zones": [
         {
-          "match": { "field": "zone_type", "equals": "Extreme Tsunami Evacuation Zone" },
+          "match": {
+            "field": "zone_type",
+            "equals": "Extreme Tsunami Evacuation Zone"
+          },
           "severity": "high",
-          "label": { "en": "In an extreme tsunami evacuation zone" },
-          "oneLiner": { "en": "If a major tsunami warning is issued, this is one of the first areas told to evacuate." },
-          "plainExplanation": { "en": "Your address is in Hawaiʻi's extreme tsunami evacuation zone. After a great earthquake on the Pacific Rim — for example a magnitude-9 event off Japan, Chile, or Alaska — the Pacific Tsunami Warning Center can issue a warning within minutes, and the wave can arrive in hours. Everyone in this zone is expected to leave on foot, not by car, as soon as a warning is broadcast." },
-          "probabilityFraming": { "en": "Pacific-wide tsunamis large enough to trigger evacuation orders happen on average every 10–20 years. The last major one to strike Hawaiʻi destroyed parts of downtown Hilo in 1960. Smaller advisories occur every few years." },
+          "label": {
+            "en": "In an extreme tsunami evacuation zone"
+          },
+          "oneLiner": {
+            "en": "If a major tsunami warning is issued, this is one of the first areas told to evacuate."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Hawaiʻi's extreme tsunami evacuation zone. After a great earthquake on the Pacific Rim — for example a magnitude-9 event off Japan, Chile, or Alaska — the Pacific Tsunami Warning Center can issue a warning within minutes, and the wave can arrive in hours. Everyone in this zone is expected to leave on foot, not by car, as soon as a warning is broadcast."
+          },
+          "probabilityFraming": {
+            "en": "Pacific-wide tsunamis large enough to trigger evacuation orders happen on average every 10–20 years. The last major one to strike Hawaiʻi destroyed parts of downtown Hilo in 1960. Smaller advisories occur every few years."
+          },
           "technicalCode": "Extreme Tsunami Evacuation Zone (XTEZ)",
           "actionIds": [
             "know_tsunami_route",
@@ -32,54 +41,106 @@
             "build_emergency_kit",
             "document_home_insurance",
             "make_household_communication_plan",
-            "prepare_evacuation_documents"
+            "prepare_evacuation_documents",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone_type", "equals": "Tsunami Evacuation Zone" },
+          "match": {
+            "field": "zone_type",
+            "equals": "Tsunami Evacuation Zone"
+          },
           "severity": "high",
-          "label": { "en": "In a tsunami evacuation zone" },
-          "oneLiner": { "en": "If a tsunami warning is issued, you should be ready to evacuate." },
-          "plainExplanation": { "en": "Your address is in Hawaiʻi's standard tsunami evacuation zone. Tsunamis from distant earthquakes can give hours of warning; tsunamis from a local quake (felt strongly for 20+ seconds) give only minutes — in that case, evacuate immediately on foot without waiting for sirens." },
-          "probabilityFraming": { "en": "Pacific-wide tsunamis large enough to trigger evacuation orders happen on average every 10–20 years. Local tsunamis are rarer but can arrive within minutes of a felt earthquake." },
+          "label": {
+            "en": "In a tsunami evacuation zone"
+          },
+          "oneLiner": {
+            "en": "If a tsunami warning is issued, you should be ready to evacuate."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Hawaiʻi's standard tsunami evacuation zone. Tsunamis from distant earthquakes can give hours of warning; tsunamis from a local quake (felt strongly for 20+ seconds) give only minutes — in that case, evacuate immediately on foot without waiting for sirens."
+          },
+          "probabilityFraming": {
+            "en": "Pacific-wide tsunamis large enough to trigger evacuation orders happen on average every 10–20 years. Local tsunamis are rarer but can arrive within minutes of a felt earthquake."
+          },
           "technicalCode": "Tsunami Evacuation Zone (TEZ)",
           "actionIds": [
             "know_tsunami_route",
             "sign_up_for_alerts",
             "build_go_bag",
             "build_emergency_kit",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone_type", "equals": "Tsunami Safe Zone" },
+          "match": {
+            "field": "zone_type",
+            "equals": "Tsunami Safe Zone"
+          },
           "severity": "low",
-          "label": { "en": "In a designated tsunami safe zone" },
-          "oneLiner": { "en": "Your address is uphill of mapped tsunami inundation — but you may help others evacuate to here." },
-          "plainExplanation": { "en": "Your address is above the tsunami evacuation zone. You're not expected to evacuate, and your neighborhood may host people fleeing from coastal areas during a warning." },
+          "label": {
+            "en": "In a designated tsunami safe zone"
+          },
+          "oneLiner": {
+            "en": "Your address is uphill of mapped tsunami inundation — but you may help others evacuate to here."
+          },
+          "plainExplanation": {
+            "en": "Your address is above the tsunami evacuation zone. You're not expected to evacuate, and your neighborhood may host people fleeing from coastal areas during a warning."
+          },
           "probabilityFraming": null,
           "technicalCode": "Tsunami Safe Zone",
-          "actionIds": ["help_neighbors_evacuate", "sign_up_for_alerts"]
+          "actionIds": [
+            "help_neighbors_evacuate",
+            "sign_up_for_alerts"
+          ]
         }
       ],
-
       "noMatch": {
         "severity": "none",
-        "label": { "en": "Not in a tsunami evacuation zone" },
-        "oneLiner": { "en": "Your address is outside Hawaiʻi's mapped tsunami evacuation zones." },
-        "plainExplanation": { "en": "Hawaiʻi only maps evacuation zones in coastal-exposed areas. Your address is outside those. You may still want to know what to do if you're at the beach or traveling near the coast when a warning is issued." },
-        "actionIds": ["sign_up_for_alerts"]
+        "label": {
+          "en": "Not in a tsunami evacuation zone"
+        },
+        "oneLiner": {
+          "en": "Your address is outside Hawaiʻi's mapped tsunami evacuation zones."
+        },
+        "plainExplanation": {
+          "en": "Hawaiʻi only maps evacuation zones in coastal-exposed areas. Your address is outside those. You may still want to know what to do if you're at the beach or traveling near the coast when a warning is issued."
+        },
+        "actionIds": [
+          "sign_up_for_alerts"
+        ]
       },
-
       "authoritativeSources": [
-        { "label": "Hawaiʻi Emergency Management Agency — Tsunami",
-          "url": "https://dod.hawaii.gov/hiema/public-resources/tsunami/" },
-        { "label": "Pacific Tsunami Warning Center",
-          "url": "https://www.tsunami.gov/" },
-        { "label": "Red Cross — Tsunami Safety",
-          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/tsunami.html" }
+        {
+          "label": "Hawaiʻi Emergency Management Agency — Tsunami",
+          "url": "https://dod.hawaii.gov/hiema/public-resources/tsunami/"
+        },
+        {
+          "label": "Pacific Tsunami Warning Center",
+          "url": "https://www.tsunami.gov/"
+        },
+        {
+          "label": "Red Cross — Tsunami Safety",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/tsunami.html"
+        }
       ],
-
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/11",
         "spatialAttribution": "Hawaiʻi Statewide GIS Program",
@@ -87,7 +148,6 @@
         "refreshCadence": "annual"
       }
     },
-
     {
       "id": "flood",
       "displayName": "FEMA flood zone",
@@ -95,15 +155,25 @@
       "iconKey": "flood",
       "spatialKey": "dfirm",
       "sortHint": 20,
-
       "zones": [
         {
-          "match": { "field": "fld_zone", "equals": "VE" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "VE"
+          },
           "severity": "high",
-          "label": { "en": "In a coastal high-hazard flood zone (V / VE)" },
-          "oneLiner": { "en": "Your property is exposed to wave action and storm surge in a major coastal flood." },
-          "plainExplanation": { "en": "Your address is in FEMA's coastal high-hazard zone — the strip along the shore where waves, not just rising water, do the damage. In a major hurricane or coastal storm, this area can see 3+ feet of moving water carrying debris. Standard homeowner's insurance does not cover this." },
-          "probabilityFraming": { "en": "FEMA designates this zone where there's about a 1% chance of major coastal flooding in any given year. Over a 30-year mortgage that's about a 1-in-4 chance the property is affected." },
+          "label": {
+            "en": "In a coastal high-hazard flood zone (V / VE)"
+          },
+          "oneLiner": {
+            "en": "Your property is exposed to wave action and storm surge in a major coastal flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's coastal high-hazard zone — the strip along the shore where waves, not just rising water, do the damage. In a major hurricane or coastal storm, this area can see 3+ feet of moving water carrying debris. Standard homeowner's insurance does not cover this."
+          },
+          "probabilityFraming": {
+            "en": "FEMA designates this zone where there's about a 1% chance of major coastal flooding in any given year. Over a 30-year mortgage that's about a 1-in-4 chance the property is affected."
+          },
           "technicalCode": "VE — Coastal high hazard with wave action and base flood elevation",
           "actionIds": [
             "review_flood_insurance",
@@ -112,16 +182,36 @@
             "sign_up_for_alerts",
             "build_go_bag",
             "make_household_communication_plan",
-            "prepare_for_hurricane"
+            "prepare_for_hurricane",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "V" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "V"
+          },
           "severity": "high",
-          "label": { "en": "In a coastal high-hazard flood zone (V)" },
-          "oneLiner": { "en": "Your property is exposed to wave action in a major coastal flood." },
-          "plainExplanation": { "en": "Your address is in FEMA's coastal V zone — wave action makes this one of the highest-risk flood designations. Standard homeowner's insurance does not cover flood damage; check separately." },
-          "probabilityFraming": { "en": "About 1% chance of major coastal flooding in any given year. Over a 30-year mortgage that's about a 1-in-4 chance." },
+          "label": {
+            "en": "In a coastal high-hazard flood zone (V)"
+          },
+          "oneLiner": {
+            "en": "Your property is exposed to wave action in a major coastal flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's coastal V zone — wave action makes this one of the highest-risk flood designations. Standard homeowner's insurance does not cover flood damage; check separately."
+          },
+          "probabilityFraming": {
+            "en": "About 1% chance of major coastal flooding in any given year. Over a 30-year mortgage that's about a 1-in-4 chance."
+          },
           "technicalCode": "V — Coastal high hazard, wave action",
           "actionIds": [
             "review_flood_insurance",
@@ -129,78 +219,176 @@
             "sign_up_for_alerts",
             "build_go_bag",
             "make_household_communication_plan",
-            "prepare_for_hurricane"
+            "prepare_for_hurricane",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "AE" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "AE"
+          },
           "severity": "high",
-          "label": { "en": "In the 100-year flood zone (AE)" },
-          "oneLiner": { "en": "Your property has a 1% chance of flooding any given year." },
-          "plainExplanation": { "en": "Your address is in FEMA's 100-year floodplain with a known base flood elevation. Standard homeowner's insurance does not cover flood damage. If you have a federally backed mortgage, flood insurance is usually required; otherwise it's optional but often a good idea." },
-          "probabilityFraming": { "en": "1% chance of flooding in any given year, which over a 30-year mortgage is about a 1-in-4 chance of at least one event." },
+          "label": {
+            "en": "In the 100-year flood zone (AE)"
+          },
+          "oneLiner": {
+            "en": "Your property has a 1% chance of flooding any given year."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's 100-year floodplain with a known base flood elevation. Standard homeowner's insurance does not cover flood damage. If you have a federally backed mortgage, flood insurance is usually required; otherwise it's optional but often a good idea."
+          },
+          "probabilityFraming": {
+            "en": "1% chance of flooding in any given year, which over a 30-year mortgage is about a 1-in-4 chance of at least one event."
+          },
           "technicalCode": "AE — 100-year floodplain with base flood elevation",
           "actionIds": [
             "review_flood_insurance",
             "document_home_insurance",
             "evaluate_flood_proofing",
             "sign_up_for_alerts",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "A" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "A"
+          },
           "severity": "high",
-          "label": { "en": "In the 100-year flood zone (A)" },
-          "oneLiner": { "en": "Your property has a 1% chance of flooding any given year." },
-          "plainExplanation": { "en": "Your address is in FEMA's 100-year floodplain. The exact flood depth has not been studied in detail. Standard homeowner's insurance does not cover flood damage." },
-          "probabilityFraming": { "en": "1% chance of flooding in any given year. Over a 30-year mortgage that's about a 1-in-4 chance of at least one event." },
+          "label": {
+            "en": "In the 100-year flood zone (A)"
+          },
+          "oneLiner": {
+            "en": "Your property has a 1% chance of flooding any given year."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's 100-year floodplain. The exact flood depth has not been studied in detail. Standard homeowner's insurance does not cover flood damage."
+          },
+          "probabilityFraming": {
+            "en": "1% chance of flooding in any given year. Over a 30-year mortgage that's about a 1-in-4 chance of at least one event."
+          },
           "technicalCode": "A — 100-year floodplain, no base flood elevation",
           "actionIds": [
             "review_flood_insurance",
             "document_home_insurance",
             "evaluate_flood_proofing",
             "sign_up_for_alerts",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "AH" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "AH"
+          },
           "severity": "moderate",
-          "label": { "en": "In a shallow flood zone (AH — ponding)" },
-          "oneLiner": { "en": "Your property may see 1–3 feet of standing water in a major flood." },
-          "plainExplanation": { "en": "Your address is in FEMA's shallow-flooding zone where water tends to pond (rather than flow). Common in low-lying inland areas. Damage is typically to floors, walls, and anything stored low; structural damage is less common than in deeper zones." },
-          "probabilityFraming": { "en": "1% chance of flooding in any given year." },
+          "label": {
+            "en": "In a shallow flood zone (AH — ponding)"
+          },
+          "oneLiner": {
+            "en": "Your property may see 1–3 feet of standing water in a major flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's shallow-flooding zone where water tends to pond (rather than flow). Common in low-lying inland areas. Damage is typically to floors, walls, and anything stored low; structural damage is less common than in deeper zones."
+          },
+          "probabilityFraming": {
+            "en": "1% chance of flooding in any given year."
+          },
           "technicalCode": "AH — Shallow flooding (ponding), 1–3 ft",
           "actionIds": [
             "review_flood_insurance",
             "document_home_insurance",
             "evaluate_flood_proofing",
-            "sign_up_for_alerts"
+            "sign_up_for_alerts",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "AO" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "AO"
+          },
           "severity": "moderate",
-          "label": { "en": "In a shallow flood zone (AO — sheet flow)" },
-          "oneLiner": { "en": "Your property may see 1–3 feet of moving water in a major flood." },
-          "plainExplanation": { "en": "Your address is in FEMA's shallow-flooding zone where water flows across the land in sheets rather than ponding. Common downhill from streams or at the base of steep terrain. Even shallow moving water is dangerous to walk through." },
-          "probabilityFraming": { "en": "1% chance of flooding in any given year." },
+          "label": {
+            "en": "In a shallow flood zone (AO — sheet flow)"
+          },
+          "oneLiner": {
+            "en": "Your property may see 1–3 feet of moving water in a major flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's shallow-flooding zone where water flows across the land in sheets rather than ponding. Common downhill from streams or at the base of steep terrain. Even shallow moving water is dangerous to walk through."
+          },
+          "probabilityFraming": {
+            "en": "1% chance of flooding in any given year."
+          },
           "technicalCode": "AO — Shallow flooding (sheet flow), 1–3 ft",
           "actionIds": [
             "review_flood_insurance",
             "document_home_insurance",
             "evaluate_flood_proofing",
-            "sign_up_for_alerts"
+            "sign_up_for_alerts",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone_subty", "equals": "0.2 PCT ANNUAL CHANCE FLOOD HAZARD" },
+          "match": {
+            "field": "zone_subty",
+            "equals": "0.2 PCT ANNUAL CHANCE FLOOD HAZARD"
+          },
           "severity": "low",
-          "label": { "en": "In the 500-year flood zone (X shaded)" },
-          "oneLiner": { "en": "Your property has about a 0.2% chance of flooding any given year." },
-          "plainExplanation": { "en": "Your address is in FEMA's 500-year floodplain. Flooding here is uncommon but happens in unusually large storms. Flood insurance isn't required for most mortgages here but is often inexpensive and worth considering." },
-          "probabilityFraming": { "en": "0.2% chance of flooding in any given year. Over a 30-year mortgage, about a 6% chance of at least one event." },
+          "label": {
+            "en": "In the 500-year flood zone (X shaded)"
+          },
+          "oneLiner": {
+            "en": "Your property has about a 0.2% chance of flooding any given year."
+          },
+          "plainExplanation": {
+            "en": "Your address is in FEMA's 500-year floodplain. Flooding here is uncommon but happens in unusually large storms. Flood insurance isn't required for most mortgages here but is often inexpensive and worth considering."
+          },
+          "probabilityFraming": {
+            "en": "0.2% chance of flooding in any given year. Over a 30-year mortgage, about a 6% chance of at least one event."
+          },
           "technicalCode": "X-shaded — 500-year floodplain",
           "actionIds": [
             "review_flood_insurance",
@@ -208,44 +396,78 @@
           ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "X" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "X"
+          },
           "severity": "none",
-          "label": { "en": "In a FEMA minimal flood hazard area (X)" },
-          "oneLiner": { "en": "Your property is outside FEMA's 100-year and 500-year flood zones." },
-          "plainExplanation": { "en": "Your address is in an area FEMA has mapped and classified as minimal flood hazard. Flooding is still possible from unusual storms, drainage issues, or sea-level rise — just not from the kinds of events FEMA tracks for insurance purposes." },
+          "label": {
+            "en": "In a FEMA minimal flood hazard area (X)"
+          },
+          "oneLiner": {
+            "en": "Your property is outside FEMA's 100-year and 500-year flood zones."
+          },
+          "plainExplanation": {
+            "en": "Your address is in an area FEMA has mapped and classified as minimal flood hazard. Flooding is still possible from unusual storms, drainage issues, or sea-level rise — just not from the kinds of events FEMA tracks for insurance purposes."
+          },
           "probabilityFraming": null,
           "technicalCode": "X — Minimal flood hazard",
-          "actionIds": ["sign_up_for_alerts"]
+          "actionIds": [
+            "sign_up_for_alerts"
+          ]
         },
         {
-          "match": { "field": "fld_zone", "equals": "D" },
+          "match": {
+            "field": "fld_zone",
+            "equals": "D"
+          },
           "severity": "low",
-          "label": { "en": "In an area of undetermined flood hazard (D)" },
-          "oneLiner": { "en": "FEMA has not studied this area's flood risk in detail." },
-          "plainExplanation": { "en": "Your address is in a zone FEMA has flagged as undetermined — possible flood hazards exist but haven't been formally mapped. Take the absence of a determination as a reason to check with the county and consider flood insurance, not a guarantee of safety." },
+          "label": {
+            "en": "In an area of undetermined flood hazard (D)"
+          },
+          "oneLiner": {
+            "en": "FEMA has not studied this area's flood risk in detail."
+          },
+          "plainExplanation": {
+            "en": "Your address is in a zone FEMA has flagged as undetermined — possible flood hazards exist but haven't been formally mapped. Take the absence of a determination as a reason to check with the county and consider flood insurance, not a guarantee of safety."
+          },
           "probabilityFraming": null,
           "technicalCode": "D — Undetermined flood hazard",
-          "actionIds": ["review_flood_insurance", "sign_up_for_alerts"]
+          "actionIds": [
+            "review_flood_insurance",
+            "sign_up_for_alerts"
+          ]
         }
       ],
-
       "noMatch": {
         "severity": "none",
-        "label": { "en": "Not in a FEMA-mapped flood zone" },
-        "oneLiner": { "en": "Your address is outside FEMA's mapped flood hazard areas." },
-        "plainExplanation": { "en": "FEMA's flood maps cover most of Hawaiʻi's developed areas. Your address falls outside their current mapping. That doesn't mean zero flood risk — drainage problems, sea-level rise, and unusual storms can still flood — but the federal hazard mapping treats it as low." },
-        "actionIds": ["sign_up_for_alerts"]
+        "label": {
+          "en": "Not in a FEMA-mapped flood zone"
+        },
+        "oneLiner": {
+          "en": "Your address is outside FEMA's mapped flood hazard areas."
+        },
+        "plainExplanation": {
+          "en": "FEMA's flood maps cover most of Hawaiʻi's developed areas. Your address falls outside their current mapping. That doesn't mean zero flood risk — drainage problems, sea-level rise, and unusual storms can still flood — but the federal hazard mapping treats it as low."
+        },
+        "actionIds": [
+          "sign_up_for_alerts"
+        ]
       },
-
       "authoritativeSources": [
-        { "label": "FEMA — Flood Map Service Center",
-          "url": "https://msc.fema.gov/portal/home" },
-        { "label": "FEMA — National Flood Insurance Program",
-          "url": "https://www.floodsmart.gov/" },
-        { "label": "Hawaiʻi NFIP State Coordinator",
-          "url": "https://dlnr.hawaii.gov/eng/nfip/" }
+        {
+          "label": "FEMA — Flood Map Service Center",
+          "url": "https://msc.fema.gov/portal/home"
+        },
+        {
+          "label": "FEMA — National Flood Insurance Program",
+          "url": "https://www.floodsmart.gov/"
+        },
+        {
+          "label": "Hawaiʻi NFIP State Coordinator",
+          "url": "https://dlnr.hawaii.gov/eng/nfip/"
+        }
       ],
-
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/6 (State DFIRM)",
         "spatialAttribution": "FEMA NFHL via Hawaiʻi Statewide GIS",
@@ -253,7 +475,6 @@
         "refreshCadence": "live"
       }
     },
-
     {
       "id": "coastal",
       "displayName": "Coastal flooding (1% + 3.2 ft sea level rise)",
@@ -261,15 +482,25 @@
       "iconKey": "wave_surge",
       "spatialKey": "slr",
       "sortHint": 25,
-
       "zones": [
         {
-          "match": { "field": "zone", "equals": "V" },
+          "match": {
+            "field": "zone",
+            "equals": "V"
+          },
           "severity": "high",
-          "label": { "en": "In a high-hazard coastal storm + sea-level-rise zone (V)" },
-          "oneLiner": { "en": "In a major hurricane or future high tides, your property is exposed to wave action." },
-          "plainExplanation": { "en": "Your address is in the wave-action zone under Hawaiʻi's combined scenario of a 1% coastal flood plus 3.2 feet of sea level rise. This is the closest equivalent we have to hurricane storm surge for Hawaiʻi — vector SLOSH maps aren't published locally. In a major hurricane, expect this area to be impassable and structurally damaged." },
-          "probabilityFraming": { "en": "Pacific hurricanes that affect Hawaiʻi are rare — Iniki destroyed much of Kauaʻi in 1992 — but the combined scenario also covers the chronic flooding from sea-level rise expected by mid-to-late century." },
+          "label": {
+            "en": "In a high-hazard coastal storm + sea-level-rise zone (V)"
+          },
+          "oneLiner": {
+            "en": "In a major hurricane or future high tides, your property is exposed to wave action."
+          },
+          "plainExplanation": {
+            "en": "Your address is in the wave-action zone under Hawaiʻi's combined scenario of a 1% coastal flood plus 3.2 feet of sea level rise. This is the closest equivalent we have to hurricane storm surge for Hawaiʻi — vector SLOSH maps aren't published locally. In a major hurricane, expect this area to be impassable and structurally damaged."
+          },
+          "probabilityFraming": {
+            "en": "Pacific hurricanes that affect Hawaiʻi are rare — Iniki destroyed much of Kauaʻi in 1992 — but the combined scenario also covers the chronic flooding from sea-level rise expected by mid-to-late century."
+          },
           "technicalCode": "V — Wave-action zone, combined coastal flood + 3.2 ft SLR",
           "actionIds": [
             "prepare_for_hurricane",
@@ -278,16 +509,36 @@
             "evaluate_flood_proofing",
             "sign_up_for_alerts",
             "build_go_bag",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone", "equals": "VE" },
+          "match": {
+            "field": "zone",
+            "equals": "VE"
+          },
           "severity": "high",
-          "label": { "en": "In a high-hazard coastal storm + SLR zone (VE)" },
-          "oneLiner": { "en": "In a major hurricane or future high tides, your property is exposed to wave action." },
-          "plainExplanation": { "en": "Your address is in the wave-action zone under Hawaiʻi's combined scenario of a 1% coastal flood plus 3.2 feet of sea level rise. This is the closest equivalent we have to hurricane storm surge for Hawaiʻi. Expect impassability and structural damage in a major hurricane." },
-          "probabilityFraming": { "en": "Pacific hurricanes affecting Hawaiʻi are rare. Iniki (1992) and Iwa (1982) both struck Kauaʻi heavily. Sea-level rise is the chronic underlying driver." },
+          "label": {
+            "en": "In a high-hazard coastal storm + SLR zone (VE)"
+          },
+          "oneLiner": {
+            "en": "In a major hurricane or future high tides, your property is exposed to wave action."
+          },
+          "plainExplanation": {
+            "en": "Your address is in the wave-action zone under Hawaiʻi's combined scenario of a 1% coastal flood plus 3.2 feet of sea level rise. This is the closest equivalent we have to hurricane storm surge for Hawaiʻi. Expect impassability and structural damage in a major hurricane."
+          },
+          "probabilityFraming": {
+            "en": "Pacific hurricanes affecting Hawaiʻi are rare. Iniki (1992) and Iwa (1982) both struck Kauaʻi heavily. Sea-level rise is the chronic underlying driver."
+          },
           "technicalCode": "VE — Coastal high hazard, wave-action, combined SLR scenario",
           "actionIds": [
             "prepare_for_hurricane",
@@ -296,16 +547,36 @@
             "evaluate_flood_proofing",
             "sign_up_for_alerts",
             "build_go_bag",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone", "equals": "CA" },
+          "match": {
+            "field": "zone",
+            "equals": "CA"
+          },
           "severity": "high",
-          "label": { "en": "In a coastal flood + SLR zone (CA)" },
-          "oneLiner": { "en": "In a major hurricane or future high tides, your property is likely to flood." },
-          "plainExplanation": { "en": "Your address is in the coastal flood zone under Hawaiʻi's combined scenario of a 1% coastal flood plus 3.2 feet of sea level rise. Expect inundation in a major hurricane and increasingly frequent nuisance flooding as seas rise." },
-          "probabilityFraming": { "en": "Hawaiʻi's sea-level-rise vulnerability report projects 3.2 ft of rise by mid-to-late century under current trajectories. Coastal flooding events that are rare today become routine in that scenario." },
+          "label": {
+            "en": "In a coastal flood + SLR zone (CA)"
+          },
+          "oneLiner": {
+            "en": "In a major hurricane or future high tides, your property is likely to flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in the coastal flood zone under Hawaiʻi's combined scenario of a 1% coastal flood plus 3.2 feet of sea level rise. Expect inundation in a major hurricane and increasingly frequent nuisance flooding as seas rise."
+          },
+          "probabilityFraming": {
+            "en": "Hawaiʻi's sea-level-rise vulnerability report projects 3.2 ft of rise by mid-to-late century under current trajectories. Coastal flooding events that are rare today become routine in that scenario."
+          },
           "technicalCode": "CA — Coastal A zone (combined 1% flood + 3.2 ft SLR)",
           "actionIds": [
             "prepare_for_hurricane",
@@ -313,60 +584,118 @@
             "document_home_insurance",
             "evaluate_flood_proofing",
             "sign_up_for_alerts",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone", "equals": "A" },
+          "match": {
+            "field": "zone",
+            "equals": "A"
+          },
           "severity": "moderate",
-          "label": { "en": "In a coastal flood + SLR zone (A)" },
-          "oneLiner": { "en": "In a major hurricane or future high tides, your property is likely to flood." },
-          "plainExplanation": { "en": "Your address is in the 1% annual coastal flood zone under a 3.2-foot sea-level rise scenario. Damage to floors, walls, and anything low is likely in a major hurricane. The same flooding will become more frequent as seas rise." },
-          "probabilityFraming": { "en": "The combined scenario reflects what's possible in a major Pacific hurricane and what becomes routine flooding under projected sea-level rise." },
+          "label": {
+            "en": "In a coastal flood + SLR zone (A)"
+          },
+          "oneLiner": {
+            "en": "In a major hurricane or future high tides, your property is likely to flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in the 1% annual coastal flood zone under a 3.2-foot sea-level rise scenario. Damage to floors, walls, and anything low is likely in a major hurricane. The same flooding will become more frequent as seas rise."
+          },
+          "probabilityFraming": {
+            "en": "The combined scenario reflects what's possible in a major Pacific hurricane and what becomes routine flooding under projected sea-level rise."
+          },
           "technicalCode": "A — Coastal flood (combined 1% + 3.2 ft SLR)",
           "actionIds": [
             "prepare_for_hurricane",
             "review_flood_insurance",
             "document_home_insurance",
             "sign_up_for_alerts",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "zone", "equals": "AE" },
+          "match": {
+            "field": "zone",
+            "equals": "AE"
+          },
           "severity": "moderate",
-          "label": { "en": "In a coastal flood + SLR zone (AE)" },
-          "oneLiner": { "en": "In a major hurricane or future high tides, your property is likely to flood." },
-          "plainExplanation": { "en": "Your address is in the 1% annual coastal flood zone with a known base elevation, under a 3.2-foot sea-level rise scenario. Damage to floors, walls, and anything low is likely in a major event." },
-          "probabilityFraming": { "en": "Reflects both major Pacific hurricane scenarios and projected sea-level rise." },
+          "label": {
+            "en": "In a coastal flood + SLR zone (AE)"
+          },
+          "oneLiner": {
+            "en": "In a major hurricane or future high tides, your property is likely to flood."
+          },
+          "plainExplanation": {
+            "en": "Your address is in the 1% annual coastal flood zone with a known base elevation, under a 3.2-foot sea-level rise scenario. Damage to floors, walls, and anything low is likely in a major event."
+          },
+          "probabilityFraming": {
+            "en": "Reflects both major Pacific hurricane scenarios and projected sea-level rise."
+          },
           "technicalCode": "AE — Coastal flood with base elevation (combined 1% + 3.2 ft SLR)",
           "actionIds": [
             "prepare_for_hurricane",
             "review_flood_insurance",
             "document_home_insurance",
             "sign_up_for_alerts",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         }
       ],
-
       "noMatch": {
         "severity": "none",
-        "label": { "en": "Not in the combined coastal flood + 3.2 ft SLR zone" },
-        "oneLiner": { "en": "Your address is outside Hawaiʻi's combined coastal-flooding and sea-level-rise scenario." },
-        "plainExplanation": { "en": "Hawaiʻi's combined-flooding scenario stays close to today's shoreline and low-lying inland areas. Your address is not in that mapped zone. Higher-elevation interior locations are generally outside this hazard." },
-        "actionIds": ["sign_up_for_alerts"]
+        "label": {
+          "en": "Not in the combined coastal flood + 3.2 ft SLR zone"
+        },
+        "oneLiner": {
+          "en": "Your address is outside Hawaiʻi's combined coastal-flooding and sea-level-rise scenario."
+        },
+        "plainExplanation": {
+          "en": "Hawaiʻi's combined-flooding scenario stays close to today's shoreline and low-lying inland areas. Your address is not in that mapped zone. Higher-elevation interior locations are generally outside this hazard."
+        },
+        "actionIds": [
+          "sign_up_for_alerts"
+        ]
       },
-
       "authoritativeSources": [
-        { "label": "Hawaiʻi Sea Level Rise Vulnerability and Adaptation Report",
-          "url": "https://climateadaptation.hawaii.gov/" },
-        { "label": "NOAA — Coastal Flood Exposure Mapper",
-          "url": "https://coast.noaa.gov/digitalcoast/tools/flood-exposure.html" },
-        { "label": "National Hurricane Center — Central Pacific",
-          "url": "https://www.nhc.noaa.gov/cphc/" }
+        {
+          "label": "Hawaiʻi Sea Level Rise Vulnerability and Adaptation Report",
+          "url": "https://climateadaptation.hawaii.gov/"
+        },
+        {
+          "label": "NOAA — Coastal Flood Exposure Mapper",
+          "url": "https://coast.noaa.gov/digitalcoast/tools/flood-exposure.html"
+        },
+        {
+          "label": "National Hurricane Center — Central Pacific",
+          "url": "https://www.nhc.noaa.gov/cphc/"
+        }
       ],
-
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/15",
         "spatialAttribution": "Hawaiʻi Sea Level Rise Vulnerability and Adaptation Report",
@@ -374,7 +703,6 @@
         "refreshCadence": "live"
       }
     },
-
     {
       "id": "wildfire",
       "displayName": "Wildfire risk area",
@@ -382,15 +710,25 @@
       "iconKey": "fire",
       "spatialKey": "fire",
       "sortHint": 30,
-
       "zones": [
         {
-          "match": { "field": "risk_rating", "equals": "High" },
+          "match": {
+            "field": "risk_rating",
+            "equals": "High"
+          },
           "severity": "high",
-          "label": { "en": "In a high wildfire-risk community" },
-          "oneLiner": { "en": "Your area is among the most fire-prone in Hawaiʻi — defensible space matters." },
-          "plainExplanation": { "en": "Your address is in a community the Hawaiʻi Wildfire Management Organization rates as high risk: leeward, dry, and grass-dominated terrain that burns quickly in dry-season winds. The 2023 Lahaina fire showed how fast these conditions can turn catastrophic. The single highest-impact thing you can do is clear dry vegetation within 30 feet of your home." },
-          "probabilityFraming": { "en": "Hawaiʻi wildfire acreage has climbed sharply over the last two decades. Lahaina (August 2023) destroyed most of the town and killed over 100 people in a few hours under high-wind conditions." },
+          "label": {
+            "en": "In a high wildfire-risk community"
+          },
+          "oneLiner": {
+            "en": "Your area is among the most fire-prone in Hawaiʻi — defensible space matters."
+          },
+          "plainExplanation": {
+            "en": "Your address is in a community the Hawaiʻi Wildfire Management Organization rates as high risk: leeward, dry, and grass-dominated terrain that burns quickly in dry-season winds. The 2023 Lahaina fire showed how fast these conditions can turn catastrophic. The single highest-impact thing you can do is clear dry vegetation within 30 feet of your home."
+          },
+          "probabilityFraming": {
+            "en": "Hawaiʻi wildfire acreage has climbed sharply over the last two decades. Lahaina (August 2023) destroyed most of the town and killed over 100 people in a few hours under high-wind conditions."
+          },
           "technicalCode": "Hawaiʻi WMO Community Wildfire Risk Rating: High",
           "actionIds": [
             "create_defensible_space",
@@ -400,54 +738,105 @@
             "identify_two_routes",
             "document_home_insurance",
             "make_household_communication_plan",
-            "prepare_evacuation_documents"
+            "prepare_evacuation_documents",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "risk_rating", "equals": "Medium" },
+          "match": {
+            "field": "risk_rating",
+            "equals": "Medium"
+          },
           "severity": "moderate",
-          "label": { "en": "In a medium wildfire-risk community" },
-          "oneLiner": { "en": "Your area sees regular dry-season fires — defensible space helps." },
-          "plainExplanation": { "en": "Your address is in a community the Hawaiʻi Wildfire Management Organization rates as medium risk. Fires move slower here than in high-risk areas but still occur most dry seasons. Clearing dry vegetation around your home is the most impactful single step." },
-          "probabilityFraming": { "en": "Hawaiʻi wildfire acreage has grown over the last two decades. Medium-risk communities see fires most years, usually contained but occasionally destructive." },
+          "label": {
+            "en": "In a medium wildfire-risk community"
+          },
+          "oneLiner": {
+            "en": "Your area sees regular dry-season fires — defensible space helps."
+          },
+          "plainExplanation": {
+            "en": "Your address is in a community the Hawaiʻi Wildfire Management Organization rates as medium risk. Fires move slower here than in high-risk areas but still occur most dry seasons. Clearing dry vegetation around your home is the most impactful single step."
+          },
+          "probabilityFraming": {
+            "en": "Hawaiʻi wildfire acreage has grown over the last two decades. Medium-risk communities see fires most years, usually contained but occasionally destructive."
+          },
           "technicalCode": "Hawaiʻi WMO Community Wildfire Risk Rating: Medium",
           "actionIds": [
             "create_defensible_space",
             "sign_up_for_alerts",
             "build_emergency_kit",
             "document_home_insurance",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "risk_rating", "equals": "Low" },
+          "match": {
+            "field": "risk_rating",
+            "equals": "Low"
+          },
           "severity": "low",
-          "label": { "en": "In a low wildfire-risk community" },
-          "oneLiner": { "en": "Wildfire risk is low here, but worth being aware of in dry-season winds." },
-          "plainExplanation": { "en": "Your address is in a community the Hawaiʻi Wildfire Management Organization rates as low risk. Fires are rare but possible, especially during dry-season trade winds or after long droughts." },
+          "label": {
+            "en": "In a low wildfire-risk community"
+          },
+          "oneLiner": {
+            "en": "Wildfire risk is low here, but worth being aware of in dry-season winds."
+          },
+          "plainExplanation": {
+            "en": "Your address is in a community the Hawaiʻi Wildfire Management Organization rates as low risk. Fires are rare but possible, especially during dry-season trade winds or after long droughts."
+          },
           "probabilityFraming": null,
           "technicalCode": "Hawaiʻi WMO Community Wildfire Risk Rating: Low",
-          "actionIds": ["sign_up_for_alerts", "build_emergency_kit"]
+          "actionIds": [
+            "sign_up_for_alerts",
+            "build_emergency_kit"
+          ]
         }
       ],
-
       "noMatch": {
         "severity": "none",
-        "label": { "en": "Not in a mapped wildfire risk community" },
-        "oneLiner": { "en": "Your address is outside Hawaiʻi WMO's mapped community wildfire risk areas." },
-        "plainExplanation": { "en": "The Hawaiʻi Wildfire Management Organization maps communities where wildfire is a recurring concern. Your address is outside those. Fire risk isn't zero — Hawaiʻi's wet windward areas can still burn in long droughts — but the dedicated mapping doesn't flag your neighborhood." },
-        "actionIds": ["sign_up_for_alerts"]
+        "label": {
+          "en": "Not in a mapped wildfire risk community"
+        },
+        "oneLiner": {
+          "en": "Your address is outside Hawaiʻi WMO's mapped community wildfire risk areas."
+        },
+        "plainExplanation": {
+          "en": "The Hawaiʻi Wildfire Management Organization maps communities where wildfire is a recurring concern. Your address is outside those. Fire risk isn't zero — Hawaiʻi's wet windward areas can still burn in long droughts — but the dedicated mapping doesn't flag your neighborhood."
+        },
+        "actionIds": [
+          "sign_up_for_alerts"
+        ]
       },
-
       "authoritativeSources": [
-        { "label": "Hawaiʻi Wildfire Management Organization — Ready, Set, Go!",
-          "url": "https://www.hawaiiwildfire.org/ready-set-go" },
-        { "label": "Hawaiʻi WMO — Community Wildfire Protection Plans",
-          "url": "https://www.hawaiiwildfire.org/cwpp" },
-        { "label": "Ready.gov — Wildfires",
-          "url": "https://www.ready.gov/wildfires" }
+        {
+          "label": "Hawaiʻi Wildfire Management Organization — Ready, Set, Go!",
+          "url": "https://www.hawaiiwildfire.org/ready-set-go"
+        },
+        {
+          "label": "Hawaiʻi WMO — Community Wildfire Protection Plans",
+          "url": "https://www.hawaiiwildfire.org/cwpp"
+        },
+        {
+          "label": "Ready.gov — Wildfires",
+          "url": "https://www.ready.gov/wildfires"
+        }
       ],
-
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/7 (Fire Risk Areas)",
         "spatialAttribution": "Hawaiʻi Wildfire Management Organization",
@@ -455,7 +844,6 @@
         "refreshCadence": "live"
       }
     },
-
     {
       "id": "lava",
       "displayName": "Lava flow hazard zone (USGS 1–9)",
@@ -463,15 +851,25 @@
       "iconKey": "volcano",
       "spatialKey": "lava",
       "sortHint": 40,
-
       "zones": [
         {
-          "match": { "field": "hzone", "equals": "1" },
+          "match": {
+            "field": "hzone",
+            "equals": "1"
+          },
           "severity": "high",
-          "label": { "en": "In USGS lava flow hazard zone 1 — highest hazard" },
-          "oneLiner": { "en": "Your address sits on an active volcanic rift — lava flows are most likely here." },
-          "plainExplanation": { "en": "Your address is in Zone 1 of the USGS lava flow hazard map: the rift zones of Mauna Loa and Kīlauea where eruptive vents open most frequently. The 2018 lower Puna eruption destroyed 700+ homes in this zone. Mauna Loa erupted again in 2022 after a 38-year quiet period. Eruption timing is unpredictable but recurrent." },
-          "probabilityFraming": { "en": "USGS estimates 25% or more of Zone 1 is covered by lava in any given century. At Kīlauea, lava flows have reached the lower East Rift Zone every few decades; at Mauna Loa, every few decades to a century." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 1 — highest hazard"
+          },
+          "oneLiner": {
+            "en": "Your address sits on an active volcanic rift — lava flows are most likely here."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 1 of the USGS lava flow hazard map: the rift zones of Mauna Loa and Kīlauea where eruptive vents open most frequently. The 2018 lower Puna eruption destroyed 700+ homes in this zone. Mauna Loa erupted again in 2022 after a 38-year quiet period. Eruption timing is unpredictable but recurrent."
+          },
+          "probabilityFraming": {
+            "en": "USGS estimates 25% or more of Zone 1 is covered by lava in any given century. At Kīlauea, lava flows have reached the lower East Rift Zone every few decades; at Mauna Loa, every few decades to a century."
+          },
           "technicalCode": "USGS Lava Flow Hazard Zone 1",
           "actionIds": [
             "monitor_hvo_updates",
@@ -480,16 +878,36 @@
             "identify_two_routes",
             "document_home_insurance",
             "make_household_communication_plan",
-            "prepare_evacuation_documents"
+            "prepare_evacuation_documents",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "hzone", "equals": "2" },
+          "match": {
+            "field": "hzone",
+            "equals": "2"
+          },
           "severity": "high",
-          "label": { "en": "In USGS lava flow hazard zone 2" },
-          "oneLiner": { "en": "Your address is adjacent to an active rift — lava flows reach this zone often." },
-          "plainExplanation": { "en": "Your address is in Zone 2 — areas adjacent to and downslope of Zone 1 rifts. About 15–25% of this zone has been covered by lava in the last 750 years. Eruption probability is high on geologic timescales." },
-          "probabilityFraming": { "en": "USGS estimates 15–25% coverage in the last 750 years. Recent flows: 2018 Kīlauea lower East Rift (lower Puna); earlier flows in Kalapana (1990) and beyond." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 2"
+          },
+          "oneLiner": {
+            "en": "Your address is adjacent to an active rift — lava flows reach this zone often."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 2 — areas adjacent to and downslope of Zone 1 rifts. About 15–25% of this zone has been covered by lava in the last 750 years. Eruption probability is high on geologic timescales."
+          },
+          "probabilityFraming": {
+            "en": "USGS estimates 15–25% coverage in the last 750 years. Recent flows: 2018 Kīlauea lower East Rift (lower Puna); earlier flows in Kalapana (1990) and beyond."
+          },
           "technicalCode": "USGS Lava Flow Hazard Zone 2",
           "actionIds": [
             "monitor_hvo_updates",
@@ -497,108 +915,220 @@
             "build_go_bag",
             "identify_two_routes",
             "document_home_insurance",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "find_accessible_shelter",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "hzone", "equals": "3" },
+          "match": {
+            "field": "hzone",
+            "equals": "3"
+          },
           "severity": "moderate",
-          "label": { "en": "In USGS lava flow hazard zone 3" },
-          "oneLiner": { "en": "Your address is downslope of active rifts — lava flows can reach here." },
-          "plainExplanation": { "en": "Your address is in Zone 3 — areas less frequently inundated than Zones 1 and 2 but still within reach of lava from active rift zones. About 1–5% covered in the last 750 years." },
-          "probabilityFraming": { "en": "1–5% coverage in the last 750 years. Flows reach Zone 3 in major prolonged eruptions." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 3"
+          },
+          "oneLiner": {
+            "en": "Your address is downslope of active rifts — lava flows can reach here."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 3 — areas less frequently inundated than Zones 1 and 2 but still within reach of lava from active rift zones. About 1–5% covered in the last 750 years."
+          },
+          "probabilityFraming": {
+            "en": "1–5% coverage in the last 750 years. Flows reach Zone 3 in major prolonged eruptions."
+          },
           "technicalCode": "USGS Lava Flow Hazard Zone 3",
           "actionIds": [
             "monitor_hvo_updates",
             "sign_up_for_alerts",
             "build_emergency_kit",
             "document_home_insurance",
-            "make_household_communication_plan"
+            "make_household_communication_plan",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "hzone", "equals": "4" },
+          "match": {
+            "field": "hzone",
+            "equals": "4"
+          },
           "severity": "moderate",
-          "label": { "en": "In USGS lava flow hazard zone 4" },
-          "oneLiner": { "en": "Lava flows have reached your area in the past, but infrequently." },
-          "plainExplanation": { "en": "Your address is in Zone 4 — typically the flanks of Hualālai or transitional areas of Mauna Loa. Lava flows here are rare but have occurred historically." },
-          "probabilityFraming": { "en": "Less than 5% coverage in the last 750 years. Hualālai's last eruption was in 1801." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 4"
+          },
+          "oneLiner": {
+            "en": "Lava flows have reached your area in the past, but infrequently."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 4 — typically the flanks of Hualālai or transitional areas of Mauna Loa. Lava flows here are rare but have occurred historically."
+          },
+          "probabilityFraming": {
+            "en": "Less than 5% coverage in the last 750 years. Hualālai's last eruption was in 1801."
+          },
           "technicalCode": "USGS Lava Flow Hazard Zone 4",
           "actionIds": [
             "monitor_hvo_updates",
             "sign_up_for_alerts",
-            "build_emergency_kit"
+            "build_emergency_kit",
+            "build_infant_kit",
+            "build_pet_evacuation_kit",
+            "register_special_needs_medical",
+            "register_special_needs_mobility",
+            "plan_power_for_medical",
+            "plan_non_vehicle_evacuation",
+            "renter_emergency_contact_check",
+            "multi_unit_evac_plan"
           ]
         },
         {
-          "match": { "field": "hzone", "equals": "5" },
+          "match": {
+            "field": "hzone",
+            "equals": "5"
+          },
           "severity": "low",
-          "label": { "en": "In USGS lava flow hazard zone 5" },
-          "oneLiner": { "en": "Lava flows in your area are uncommon on human timescales." },
-          "plainExplanation": { "en": "Your address is in Zone 5 — areas protected by topography or upslope from active rifts. Flows can occur but only in unusual circumstances." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 5"
+          },
+          "oneLiner": {
+            "en": "Lava flows in your area are uncommon on human timescales."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 5 — areas protected by topography or upslope from active rifts. Flows can occur but only in unusual circumstances."
+          },
           "probabilityFraming": null,
           "technicalCode": "USGS Lava Flow Hazard Zone 5",
-          "actionIds": ["monitor_hvo_updates", "sign_up_for_alerts"]
+          "actionIds": [
+            "monitor_hvo_updates",
+            "sign_up_for_alerts"
+          ]
         },
         {
-          "match": { "field": "hzone", "equals": "6" },
+          "match": {
+            "field": "hzone",
+            "equals": "6"
+          },
           "severity": "low",
-          "label": { "en": "In USGS lava flow hazard zone 6" },
-          "oneLiner": { "en": "Lava flows in your area are rare on human timescales." },
-          "plainExplanation": { "en": "Your address is in Zone 6 — typically the upper slopes of Mauna Kea, with no eruptions in the last several thousand years. Lava flows here are very unlikely." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 6"
+          },
+          "oneLiner": {
+            "en": "Lava flows in your area are rare on human timescales."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 6 — typically the upper slopes of Mauna Kea, with no eruptions in the last several thousand years. Lava flows here are very unlikely."
+          },
           "probabilityFraming": null,
           "technicalCode": "USGS Lava Flow Hazard Zone 6",
-          "actionIds": ["sign_up_for_alerts"]
+          "actionIds": [
+            "sign_up_for_alerts"
+          ]
         },
         {
-          "match": { "field": "hzone", "equals": "7" },
+          "match": {
+            "field": "hzone",
+            "equals": "7"
+          },
           "severity": "low",
-          "label": { "en": "In USGS lava flow hazard zone 7" },
-          "oneLiner": { "en": "Lava flow risk in your area is very low." },
-          "plainExplanation": { "en": "Your address is in Zone 7 — Kohala on the Big Island, which has not erupted in tens of thousands of years. Lava flow risk is very low." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 7"
+          },
+          "oneLiner": {
+            "en": "Lava flow risk in your area is very low."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 7 — Kohala on the Big Island, which has not erupted in tens of thousands of years. Lava flow risk is very low."
+          },
           "probabilityFraming": null,
           "technicalCode": "USGS Lava Flow Hazard Zone 7",
-          "actionIds": ["sign_up_for_alerts"]
+          "actionIds": [
+            "sign_up_for_alerts"
+          ]
         },
         {
-          "match": { "field": "hzone", "equals": "8" },
+          "match": {
+            "field": "hzone",
+            "equals": "8"
+          },
           "severity": "none",
-          "label": { "en": "In USGS lava flow hazard zone 8" },
-          "oneLiner": { "en": "Your area has effectively no lava flow risk." },
-          "plainExplanation": { "en": "Your address is in Zone 8 — areas considered effectively safe from lava on human timescales." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 8"
+          },
+          "oneLiner": {
+            "en": "Your area has effectively no lava flow risk."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 8 — areas considered effectively safe from lava on human timescales."
+          },
           "probabilityFraming": null,
           "technicalCode": "USGS Lava Flow Hazard Zone 8",
-          "actionIds": ["sign_up_for_alerts"]
+          "actionIds": [
+            "sign_up_for_alerts"
+          ]
         },
         {
-          "match": { "field": "hzone", "equals": "9" },
+          "match": {
+            "field": "hzone",
+            "equals": "9"
+          },
           "severity": "none",
-          "label": { "en": "In USGS lava flow hazard zone 9 — lowest hazard" },
-          "oneLiner": { "en": "Your area has the lowest lava flow risk on the Big Island." },
-          "plainExplanation": { "en": "Your address is in Zone 9 — Maui, Lānaʻi, Molokaʻi, Oʻahu, and Kauaʻi, whose volcanoes are extinct or near-extinct. Lava flow risk is essentially zero." },
+          "label": {
+            "en": "In USGS lava flow hazard zone 9 — lowest hazard"
+          },
+          "oneLiner": {
+            "en": "Your area has the lowest lava flow risk on the Big Island."
+          },
+          "plainExplanation": {
+            "en": "Your address is in Zone 9 — Maui, Lānaʻi, Molokaʻi, Oʻahu, and Kauaʻi, whose volcanoes are extinct or near-extinct. Lava flow risk is essentially zero."
+          },
           "probabilityFraming": null,
           "technicalCode": "USGS Lava Flow Hazard Zone 9",
-          "actionIds": ["sign_up_for_alerts"]
+          "actionIds": [
+            "sign_up_for_alerts"
+          ]
         }
       ],
-
       "noMatch": {
         "severity": "none",
-        "label": { "en": "Outside USGS lava flow hazard zones" },
-        "oneLiner": { "en": "Your address is outside the USGS lava flow hazard mapping." },
-        "plainExplanation": { "en": "USGS lava-flow hazard zones cover the Hawaiian islands. If your address didn't match, it may be just offshore or in a small unmapped area." },
+        "label": {
+          "en": "Outside USGS lava flow hazard zones"
+        },
+        "oneLiner": {
+          "en": "Your address is outside the USGS lava flow hazard mapping."
+        },
+        "plainExplanation": {
+          "en": "USGS lava-flow hazard zones cover the Hawaiian islands. If your address didn't match, it may be just offshore or in a small unmapped area."
+        },
         "actionIds": []
       },
-
       "authoritativeSources": [
-        { "label": "USGS Hawaiian Volcano Observatory",
-          "url": "https://www.usgs.gov/observatories/hvo" },
-        { "label": "USGS — Lava Flow Hazard Zones (Big Island)",
-          "url": "https://www.usgs.gov/observatories/hvo/news/lava-flow-hazard-zone-maps-island-hawaii" },
-        { "label": "Hawaiʻi County Civil Defense",
-          "url": "https://www.hawaiicounty.gov/departments/civil-defense" }
+        {
+          "label": "USGS Hawaiian Volcano Observatory",
+          "url": "https://www.usgs.gov/observatories/hvo"
+        },
+        {
+          "label": "USGS — Lava Flow Hazard Zones (Big Island)",
+          "url": "https://www.usgs.gov/observatories/hvo/news/lava-flow-hazard-zone-maps-island-hawaii"
+        },
+        {
+          "label": "Hawaiʻi County Civil Defense",
+          "url": "https://www.hawaiicounty.gov/departments/civil-defense"
+        }
       ],
-
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/3",
         "spatialAttribution": "USGS Hawaiian Volcano Observatory",

@@ -171,6 +171,7 @@
       "hazardIds": ["wildfire"],
       "appliesToSeverities": ["high"],
       "dedupeKey": "home_hardening_fire",
+      "requirements": { "isOwner": true },
       "sources": [
         { "label": "Hawaiʻi WMO — Home Hardening",
           "url": "https://www.hawaiiwildfire.org/" },
@@ -188,6 +189,7 @@
       "hazardIds": ["flood", "coastal"],
       "appliesToSeverities": ["moderate", "high"],
       "dedupeKey": "flood_proofing",
+      "requirements": { "isOwner": true },
       "sources": [
         { "label": "FEMA — Homeowner's Guide to Retrofitting",
           "url": "https://www.fema.gov/sites/default/files/2020-08/FEMA_P-312.pdf" }
@@ -255,6 +257,180 @@
       "sources": [
         { "label": "Ready.gov — Safeguarding Documents",
           "url": "https://www.ready.gov/financial-preparedness" }
+      ]
+    },
+
+
+    {
+      "id": "build_infant_kit",
+      "title": { "en": "Add infant supplies to your emergency kit" },
+      "description": { "en": "Pack a sealed bag with at least two weeks of formula or food, a clean bottle, diapers and wipes for two weeks, infant medications you can't get same-day, a change of clothes for several sizes ahead, and a copy of your pediatrician's contact info. Rotate the food and check fit every few months." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "infant_kit",
+      "requirements": { "hasInfant": true },
+      "sources": [
+        { "label": "Red Cross — Disaster Supplies for Infants",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/survival-kit-supplies.html" },
+        { "label": "Ready.gov — Build a Kit",
+          "url": "https://www.ready.gov/kit" }
+      ]
+    },
+
+    {
+      "id": "build_pet_evacuation_kit",
+      "title": { "en": "Build a pet evacuation kit" },
+      "description": { "en": "Pack a carrier or leash, two weeks of food and water, your pet's medications, a recent photo of you with your pet (in case you get separated), and copies of vaccination records. Hawaiʻi shelters do not all accept pets — call ahead or check your county's list of pet-friendly shelters now." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "1 hour",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "pet_kit",
+      "requirements": { "hasPet": true },
+      "sources": [
+        { "label": "Red Cross — Pets and Disasters",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/pet-disaster-preparedness.html" },
+        { "label": "Ready.gov — Care for Animals",
+          "url": "https://www.ready.gov/pets" },
+        { "label": "Hawaiian Humane Society — Disaster Preparedness",
+          "url": "https://www.hawaiianhumane.org/" }
+      ]
+    },
+
+    {
+      "id": "register_special_needs_medical",
+      "_TODO": "Verify each county actually runs a special-needs registry and replace the civil-defense fallback URLs below with the correct registry pages. Per ROADMAP open decision #1. Same TODO applies to register_special_needs_mobility.",
+      "title": { "en": "Register with your county for medical-needs assistance" },
+      "description": { "en": "If a household member depends on electricity for medical equipment, contact your county civil defense to ask about a special-needs registry. Where one exists, registering means first responders know to check on you during outages and evacuations. If your county doesn't keep a registry, ask which programs do (power-utility medical baseline lists, neighborhood watch, kūpuna programs)." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "special_needs_registry",
+      "requirements": { "powerDependentMedical": true },
+      "sources": [
+        { "label": "Honolulu Department of Emergency Management",
+          "url": "https://www.honolulu.gov/dem/" },
+        { "label": "Maui County Emergency Management Agency",
+          "url": "https://www.mauicounty.gov/2257/Emergency-Alerts" },
+        { "label": "Hawaiʻi County Civil Defense",
+          "url": "https://www.hawaiicounty.gov/departments/civil-defense" },
+        { "label": "Kauaʻi Emergency Management Agency",
+          "url": "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management-Agency" }
+      ]
+    },
+
+    {
+      "id": "register_special_needs_mobility",
+      "title": { "en": "Register with your county for evacuation assistance" },
+      "description": { "en": "If a household member uses a wheelchair, walking aid, or otherwise needs help evacuating, contact your county civil defense to ask about a special-needs registry. Where one exists, registering means first responders know to check on you and what kind of help you'll need." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "special_needs_registry",
+      "requirements": { "hasMobilityNeeds": true },
+      "sources": [
+        { "label": "Honolulu Department of Emergency Management",
+          "url": "https://www.honolulu.gov/dem/" },
+        { "label": "Maui County Emergency Management Agency",
+          "url": "https://www.mauicounty.gov/2257/Emergency-Alerts" },
+        { "label": "Hawaiʻi County Civil Defense",
+          "url": "https://www.hawaiicounty.gov/departments/civil-defense" },
+        { "label": "Kauaʻi Emergency Management Agency",
+          "url": "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management-Agency" }
+      ]
+    },
+
+    {
+      "id": "plan_power_for_medical",
+      "title": { "en": "Plan a backup power source for medical equipment" },
+      "description": { "en": "Decide now what you'll do if the power is out for days. Options: a portable battery sized for your equipment, a small generator with safe outdoor placement, an arrangement with a friend or shelter that has power, or notifying your utility company in advance that you're on a medical-baseline list. Don't wait for a forecast — talk to your equipment supplier this month." },
+      "timeHorizon": "this_month",
+      "estimatedTime": "1 hour to plan, more to implement",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["low", "moderate", "high"],
+      "dedupeKey": "medical_power_backup",
+      "requirements": { "powerDependentMedical": true },
+      "sources": [
+        { "label": "Ready.gov — Power Outages",
+          "url": "https://www.ready.gov/power-outages" },
+        { "label": "Red Cross — Power Outage Safety",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/power-outage.html" }
+      ]
+    },
+
+    {
+      "id": "find_accessible_shelter",
+      "title": { "en": "Identify an accessibility-compatible shelter near you" },
+      "description": { "en": "Not all evacuation shelters are equipped for wheelchairs, walking aids, or medical equipment. Call your county civil defense to ask which nearby shelters are accessibility-compatible, and write the answer down where you can find it during an evacuation." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "accessible_shelter",
+      "requirements": { "hasMobilityNeeds": true },
+      "sources": [
+        { "label": "Red Cross — People with Disabilities and Disasters",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/inclusive-preparedness-resources.html" },
+        { "label": "Ready.gov — Disability Resources",
+          "url": "https://www.ready.gov/disability" }
+      ]
+    },
+
+    {
+      "id": "plan_non_vehicle_evacuation",
+      "title": { "en": "Plan an evacuation route that doesn't require a car" },
+      "description": { "en": "If you can't drive yourself out, decide now who picks you up or how you'll evacuate on foot. Ask a neighbor who drives; identify the closest bus route; print a walking map to your nearest safe zone. In a no-notice event (local tsunami, fast wildfire), walking on foot to higher ground or away from the coast may be the only option." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "45 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "non_vehicle_evac",
+      "requirements": { "noVehicle": true },
+      "sources": [
+        { "label": "HI-EMA — Public Resources",
+          "url": "https://dod.hawaii.gov/hiema/" },
+        { "label": "Red Cross — Make a Plan",
+          "url": "https://www.redcross.org/get-help/how-to-prepare-for-emergencies/make-a-plan.html" }
+      ]
+    },
+
+    {
+      "id": "renter_emergency_contact_check",
+      "title": { "en": "Confirm your landlord's emergency contact and inspection schedule" },
+      "description": { "en": "As a renter, your landlord is responsible for the building's structural integrity, but you may not know how they handle disaster damage or inspections. Get a working emergency phone number, ask whether the building has a posted evacuation plan, and confirm whether your renter's insurance covers your possessions in a flood, fire, or earthquake." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "renter_landlord_contact",
+      "requirements": { "isRenter": true },
+      "sources": [
+        { "label": "Hawaiʻi State Tenant Information",
+          "url": "https://cca.hawaii.gov/ocp/" },
+        { "label": "Insurance Information Institute — Renters Insurance",
+          "url": "https://www.iii.org/article/whats-covered-by-standard-renters-insurance-policy" }
+      ]
+    },
+
+    {
+      "id": "multi_unit_evac_plan",
+      "title": { "en": "Know your building's evacuation plan" },
+      "description": { "en": "If you live in an apartment, condo, or multi-unit building, find the posted evacuation route from your floor to the exit. Walk it once. Identify where you would meet other residents outside the building. If your building has a fire alarm or generator-backed elevator, ask the manager when they last tested." },
+      "timeHorizon": "this_week",
+      "estimatedTime": "30 minutes",
+      "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
+      "appliesToSeverities": ["moderate", "high"],
+      "dedupeKey": "multi_unit_evac",
+      "requirements": { "isApartmentOrCondo": true },
+      "sources": [
+        { "label": "NFPA — High-Rise Buildings",
+          "url": "https://www.nfpa.org/Public-Education/Staying-safe/Safety-in-living-and-entertainment-spaces/High-rise-apartment-and-condo-buildings" },
+        { "label": "Ready.gov — Make a Plan",
+          "url": "https://www.ready.gov/plan" }
       ]
     }
   ]

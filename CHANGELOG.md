@@ -9,7 +9,98 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ## [Unreleased]
 
-The v2.0.0 milestone is complete (see below). Future work tracked here.
+The v2.1.0 milestone is complete (see below). Future work tracked in [ROADMAP.md](ROADMAP.md).
+
+---
+
+## [v2.1.0] — 2026-05-19 *(tagged)*
+
+The "household profile" minor version. Adds an **optional** client-side
+household profile that personalizes the preparedness action plan based on who
+lives at the address. v2.0.0 reports continue to work unchanged for users
+without a saved profile.
+
+### Architecture
+
+- **Filter-based.** Each action in `content/actions.json` gains an optional
+  `requirements` block mapping profile-derived boolean flags to required
+  values (`true` = household must have it; `false` = household must lack
+  it). Actions without requirements always pass — the existing baseline.
+- **Profile derivation.** `js/profile.js` exposes `profileFlags(profile)`
+  returning a flat boolean map (`hasInfant`, `hasPet`,
+  `powerDependentMedical`, `noVehicle`, `isApartmentOrCondo`, etc.). 22
+  flag names defined; schema enforces them.
+- **Filter integration.** `synthesize()` accepts an optional `profile`
+  option; `buildActionPlan` filters via `meetsRequirements(action, flags)`
+  before dedupe + sort + cap. Each plan entry now carries
+  `matchedRequirements: boolean` for the UI to badge.
+
+### Added
+
+- **`js/profile.js`** — `loadProfile / saveProfile / clearProfile /
+  profileFlags / isProfileActive`. `localStorage` only, key
+  `hi-hazards/household-profile-v1`. Schema-version-tagged for future
+  migrations.
+- **`content/schemas/profile.schema.json`** — JSON Schema for the
+  household profile shape.
+- **`js/report-profile-ui.js`** — `renderProfileSection(profile, onSave,
+  onClear)`. Native `<details>` expander, five fieldsets (Household, Pets,
+  Mobility & medical, Getting around, Your home), 27 inputs + language
+  select. Privacy line, Save button, "Forget my household details" button
+  with confirm.
+- **9 new profile-gated actions** in `content/actions.json`:
+  - `build_infant_kit` (hasInfant)
+  - `build_pet_evacuation_kit` (hasPet)
+  - `register_special_needs_medical` / `register_special_needs_mobility`
+    (powerDependentMedical / hasMobilityNeeds; shared `dedupeKey` so
+    only one entry surfaces per household)
+  - `plan_power_for_medical` (powerDependentMedical)
+  - `find_accessible_shelter` (hasMobilityNeeds; moderate+high only)
+  - `plan_non_vehicle_evacuation` (noVehicle; moderate+high only)
+  - `renter_emergency_contact_check` (isRenter; moderate+high only)
+  - `multi_unit_evac_plan` (isApartmentOrCondo; moderate+high only)
+- **`requirements` blocks on two existing homeowner-only actions:**
+  `harden_home_for_fire` and `evaluate_flood_proofing` now gated by
+  `isOwner: true`.
+- **`scripts/wire-profile-actions.js`** — one-shot, idempotent script
+  that threaded all 9 new action IDs into every relevant zone in
+  `content/hazards.json` (12 high-severity zones + 7 moderate, 164
+  references total).
+- **Validator extension** — recognizes `requirements` blocks against the
+  schema's allowed flag list; recognizes `_TODO` on actions.
+- **Per-action *For your household* badge** in the report, with a 3px
+  accent-color left border on personalized action items.
+
+### Privacy invariants (verified)
+
+- Profile lives only in `localStorage`. No fetch / no XHR.
+- URL hash is never written from profile data; the share link works
+  identically whether or not a profile is saved.
+- Print stylesheet hides the profile capture section so the printed
+  report doesn't include personalization controls.
+- Clear button removes the localStorage key; subsequent reports render
+  baseline content.
+
+### Known limitations / v2.x candidates
+
+- `register_special_needs_*` actions cite county civil-defense fallback
+  URLs. The actual special-needs-registry pages per HI county still need
+  verification (see [ROADMAP.md](ROADMAP.md) open decision #1).
+- Multilingual content not yet authored; profile captures language
+  preference but only `en` strings exist. Sets the schema up for future
+  translation work.
+- Synthesis throughput unchanged from v2.0; cold-cache + slow live ArcGIS
+  can take 5–15s. Optimization candidates listed in v2.0 known
+  limitations are unchanged.
+
+### Verified
+
+- Engine: synthesize accepts profile; filter behavior confirmed across
+  four scenarios (no profile / infant only / no-vehicle only / both)
+  using a stubbed LayerManager.
+- Content: 25 actions total, 0 errors, 2 expected warnings on validator.
+- UI: form save persists to localStorage; re-rendered action plan
+  surfaces profile-gated actions with the badge styling.
 
 ---
 

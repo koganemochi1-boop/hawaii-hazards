@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "profile.schema.json",
+  "title": "Household profile (client-side, optional)",
+  "description": "Captures household composition for personalizing the action plan. All fields optional. Stored ONLY in localStorage under `hi-hazards/household-profile-v1`. Never transmitted, never in the URL hash.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "householdSize": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "description": "Total number of people living at this address."
+    },
+    "ages": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": ["infant", "young_child", "school_age", "teen", "adult", "senior"]
+      },
+      "description": "Age groups present in the household. infant: <2; young_child: 2–5; school_age: 6–12; teen: 13–17; adult: 18–64; senior: 65+."
+    },
+    "pets": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["dog", "cat", "other"] }
+    },
+    "petCount": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 50
+    },
+    "mobility": {
+      "enum": ["none", "walking_aid", "wheelchair", "non_ambulatory"],
+      "description": "Highest level of mobility assistance need in the household."
+    },
+    "powerDependentMedical": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["oxygen", "dialysis", "refrigerated_meds", "cpap"] }
+    },
+    "vehicle": {
+      "enum": ["own", "shared", "none"],
+      "description": "Vehicle access pattern. 'own': household has its own vehicle. 'shared': uses a shared/rental/family member's. 'none': no reliable vehicle access."
+    },
+    "language": {
+      "type": "string",
+      "description": "Preferred language code (ISO 639-1) for action-plan text. Falls back to 'en' if no translation exists for that language."
+    },
+    "homeType": {
+      "enum": ["single_family", "apartment", "condo", "multi_unit"]
+    },
+    "tenure": {
+      "enum": ["renter", "owner"]
+    },
+    "_schemaVersion": {
+      "const": 1,
+      "description": "Profile schema version. Bumped when fields change incompatibly so loaders can migrate."
+    }
+  }
+}

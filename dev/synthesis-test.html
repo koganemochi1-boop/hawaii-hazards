@@ -94,7 +94,7 @@
 
     let layerManager, content;
 
-    map.on('load', async () => {
+    async function bootHarness() {
       statusEl.textContent = 'Loading hazards.json + actions.json…';
       try {
         // Cache-bust content fetches too — content edits are the most common
@@ -117,7 +117,14 @@
         statusEl.textContent = `Error: ${e.message}`;
         console.error(e);
       }
-    });
+    }
+
+    // Boot once the map style is loaded — handle the case where it already is.
+    if (map.loaded()) {
+      bootHarness();
+    } else {
+      map.on('load', bootHarness);
+    }
 
     async function runAll() {
       for (const c of CASES) {
