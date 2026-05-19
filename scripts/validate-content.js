@@ -11,8 +11,12 @@
 //   0  all checks passed (warnings may still print)
 //   1  one or more hard errors — content is not synthesizable
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = path.dirname(__filename);
 
 const ROOT = path.join(__dirname, '..');
 const HAZARDS_PATH = path.join(ROOT, 'content', 'hazards.json');
@@ -21,6 +25,16 @@ const ACTIONS_PATH = path.join(ROOT, 'content', 'actions.json');
 const SEVERITIES = new Set(['none', 'low', 'moderate', 'high']);
 const APPLY_SEVERITIES = new Set(['low', 'moderate', 'high']);
 const TIME_HORIZONS = new Set(['right_now', 'this_week', 'this_month']);
+const PROFILE_FLAGS = new Set([
+  'hasInfant', 'hasYoungChild', 'hasSchoolAge', 'hasTeen', 'hasSenior',
+  'hasPet', 'hasDog', 'hasCat',
+  'hasMobilityNeeds', 'usesWheelchair', 'isNonAmbulatory',
+  'powerDependentMedical', 'needsOxygen', 'needsDialysis',
+  'needsRefrigeratedMeds', 'needsCPAP',
+  'noVehicle', 'sharedVehicle',
+  'isSingleFamily', 'isApartmentOrCondo',
+  'isRenter', 'isOwner',
+]);
 
 let errors = 0;
 let warnings = 0;
@@ -66,6 +80,23 @@ for (const a of actions.actions) {
   for (const s of a.sources || []) {
     if (!s.label || !s.url) err(`Action ${a.id}: source missing label/url`);
     if (s.url && !/^https?:\/\//.test(s.url)) err(`Action ${a.id}: source url is not http(s) — ${s.url}`);
+  }
+  if (a.requirements !== undefined) {
+    if (typeof a.requirements !== 'object' || Array.isArray(a.requirements) || a.requirements === null) {
+      err(`Action ${a.id}: requirements must be an object`);
+    } else {
+      for (const [flag, val] of Object.entries(a.requirements)) {
+        if (!PROFILE_FLAGS.has(flag)) {
+          err(`Action ${a.id}: unknown profile flag "${flag}" in requirements (see content/schemas/actions.schema.json for the allowed list)`);
+        }
+        if (typeof val !== 'boolean') {
+          err(`Action ${a.id}: requirements.${flag} must be a boolean (got ${typeof val})`);
+        }
+      }
+      if (Object.keys(a.requirements).length === 0) {
+        warn(`Action ${a.id}: empty requirements object — omit the field entirely to mean "no requirements"`);
+      }
+    }
   }
   if (a.dedupeKey) {
     if (!dedupeKeys.has(a.dedupeKey)) dedupeKeys.set(a.dedupeKey, []);

@@ -32,6 +32,20 @@
       "additionalProperties": false
     },
 
+    "profileFlag": {
+      "enum": [
+        "hasInfant", "hasYoungChild", "hasSchoolAge", "hasTeen", "hasSenior",
+        "hasPet", "hasDog", "hasCat",
+        "hasMobilityNeeds", "usesWheelchair", "isNonAmbulatory",
+        "powerDependentMedical", "needsOxygen", "needsDialysis",
+        "needsRefrigeratedMeds", "needsCPAP",
+        "noVehicle", "sharedVehicle",
+        "isSingleFamily", "isApartmentOrCondo",
+        "isRenter", "isOwner"
+      ],
+      "description": "Names match the boolean flags returned by profileFlags(profile) in js/profile.js."
+    },
+
     "action": {
       "type": "object",
       "required": [
@@ -52,6 +66,16 @@
           "uniqueItems": true
         },
         "dedupeKey":             { "type": "string", "description": "Actions sharing a dedupeKey collapse to one row across hazards." },
+        "requirements":          {
+          "type": "object",
+          "description": "Optional profile-derived gating. When present, the action ONLY surfaces if every listed flag matches the household profile (true = required, false = required-absent). Actions with no requirements always surface.",
+          "additionalProperties": false,
+          "patternProperties": {
+            "^(hasInfant|hasYoungChild|hasSchoolAge|hasTeen|hasSenior|hasPet|hasDog|hasCat|hasMobilityNeeds|usesWheelchair|isNonAmbulatory|powerDependentMedical|needsOxygen|needsDialysis|needsRefrigeratedMeds|needsCPAP|noVehicle|sharedVehicle|isSingleFamily|isApartmentOrCondo|isRenter|isOwner)$": {
+              "type": "boolean"
+            }
+          }
+        },
         "sources":               { "type": "array", "items": { "$ref": "#/$defs/source" }, "minItems": 1 }
       }
     }
