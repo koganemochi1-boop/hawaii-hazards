@@ -4,6 +4,7 @@
 
 import { LayerManager } from './layers.js';
 import { synthesize } from './synthesis.js';
+import { loadProfile, saveProfile, clearProfile, isProfileActive } from './profile.js';
 import {
   renderAddressBar,
   renderOverallTile,
@@ -13,6 +14,7 @@ import {
   renderReportActions,
   renderInvalidLocation,
 } from './report-components.js';
+import { renderProfileSection } from './report-profile-ui.js';
 
 const HAWAII_BOUNDS = [[-161.0, 18.5], [-154.4, 22.7]];
 
@@ -86,11 +88,20 @@ async function bootstrap() {
     attributionControl: { compact: true },
   });
 
-  await new Promise((resolve, reject) => {
-    let settled = false;
-    map.once('load', () => { settled = true; resolve(); });
-    map.once('error', (e) => { if (!settled) reject(e?.error || new Error('Map style failed')); });
-  });
+  // Wait for the map style to load. Handle the case where map.loaded()
+  // is already true by the time we get here (synchronous style load).
+  if (!map.loaded()) {
+    await new Promise((resolve, reject) => {
+      let settled = false;
+      const onLoad = () => { settled = true; resolve(); };
+      const onError = (e) => { if (!settled) reject(e?.error || new Error('Map style failed')); };
+      map.once('load', onLoad);
+      map.once('error', onError);
+      // Safety: if load somehow fires between the .loaded() check and the
+      // listener registration, time out and proceed.
+      setTimeout(() => { if (!settled) { settled = true; resolve(); } }, 5000);
+    });
+  }
 
   const layerManager = new LayerManager(map);
 
@@ -109,9 +120,9 @@ async function bootstrap() {
   const actionsDoc = await actResp.json();
   const content = { hazards: hazardsDoc.hazards, actions: actionsDoc.actions };
 
-  // Run synthesis.
+  // Run synthesis with the saved household profile (null if none).
   const t0 = performance.now();
-  const result = await synthesize([lng, lat], layerManager, content);
+  const result = await synthesize([lng, lat], layerManager, content, { profile: loadProfile() });
   const elapsedMs = Math.round(performance.now() - t0);
   console.log('[report] synthesis took', elapsedMs, 'ms', result);
 
@@ -124,8 +135,46 @@ async function bootstrap() {
   }));
   reportEl.appendChild(renderOverallTile(result.overall, result.hazardSummaries));
   reportEl.appendChild(renderHazardList(result.hazardSummaries));
-  reportEl.appendChild(renderActionPlan(result.plan));
+
+  // Profile capture section sits above the action plan so saving it
+  // re-renders the plan right next to it. Held in `currentProfileSection`
+  // so rerun cycles can find and replace the live DOM node.
+  let currentProfileSection = makeProfileSection(loadProfile());
+  reportEl.appendChild(currentProfileSection);
+
+  // Mount the action plan; keep a reference so we can swap it on profile change.
+  let planEl = renderActionPlan(result.plan);
+  reportEl.appendChild(planEl);
+
   reportEl.appendChild(renderMapSection());
+
+  function makeProfileSection(profile) {
+    return renderProfileSection(
+      profile,
+      async (newProfile) => {
+        saveProfile(newProfile);
+        await rerunPlan(newProfile);
+      },
+      async () => {
+        clearProfile();
+        await rerunPlan(null);
+      }
+    );
+  }
+
+  async function rerunPlan(profile) {
+    const fresh = await synthesize([lng, lat], layerManager, content, { profile });
+
+    const newPlanEl = renderActionPlan(fresh.plan);
+    planEl.replaceWith(newPlanEl);
+    planEl = newPlanEl;
+
+    const newProfileSection = makeProfileSection(profile);
+    currentProfileSection.replaceWith(newProfileSection);
+    currentProfileSection = newProfileSection;
+
+    toast(profile ? 'Plan updated for your household' : 'Personalization cleared');
+  }
 
   // Move the map into the visible mount and reveal it.
   const mount = document.getElementById('map-mount');
