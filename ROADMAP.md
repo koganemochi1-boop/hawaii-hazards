@@ -17,7 +17,7 @@ Update this file when:
 
 - **Latest tag:** `v2.0.0` (synthesis report). Tagged 2026-05-14.
 - **Default branch:** `main` at commit `266a9f0`.
-- **Active branch:** `v2.1-evac-routes` (created for the next phase; no work yet).
+- **Active branch:** `v2.1-household-profile` (created for the next phase; ROADMAP-only commit on it so far).
 - **Deployed:**
   - Live site: https://koganemochi1-boop.github.io/hawaii-hazards/
   - Repo: https://github.com/koganemochi1-boop/hawaii-hazards
@@ -38,9 +38,11 @@ Pivot from GIS viewer to a resident-facing risk-communication tool. Address-firs
 
 ## Active work
 
-**Branch:** `v2.1-evac-routes`
+**Branch:** `v2.1-household-profile`
 
-No commits on this branch yet. The intent (per the original v2 spec) is evacuation routing — walking and driving routes from an address to the nearest appropriate shelter, with hazard-aware routing where feasible. See "v2.1 — evacuation routes" below.
+Adds an optional client-side household profile (people, ages, pets, mobility, medical, vehicle, language, home type, tenure) that personalizes the action plan. Stored in `localStorage` only; never transmitted. The synthesis engine reads profile flags to gate which actions surface. See "v2.1 — household profile" below.
+
+Evacuation routing (originally planned for v2.1) has been deferred to v2.2.
 
 ---
 
@@ -56,7 +58,31 @@ These are not version bumps — they are quality gates on the existing v2.0.0 de
 4. **Tag a `v2.0.1` patch with the reviewed content.** Mark content as `lastReviewedBy: "HI-EMA, <date>"` etc. This is the version we point partners at.
 5. **Optional: a small group of trusted Hawaiʻi residents user-test the site on phones.** Capture confusion, broken expectations, language that doesn't read right. Iterate.
 
-### v2.1 — Evacuation routes *(current next phase)*
+### v2.1 — Household profile *(current next phase)*
+
+Adds an **optional** client-side household profile that personalizes the action plan. The synthesis engine gates which actions surface based on profile flags. Client-side storage only — no server, no PII transmission, never in the URL hash.
+
+**Profile fields (all optional):**
+
+- Household size (number)
+- Ages present (multi-select: infant / young child / school-age / teen / adult / senior)
+- Pets (multi-select: dog / cat / other) + count
+- Mobility assistance needs (none / walking aid / wheelchair / non-ambulatory)
+- Power-dependent medical needs (multi-select: oxygen / dialysis / refrigerated meds / CPAP)
+- Vehicle access (own / shared / none)
+- Preferred language (English / Filipino / Japanese / Korean / Hawaiian / Marshallese / Ilocano / Tongan / Samoan / Spanish / Other)
+- Home type (single-family / apartment / condo / multi-unit)
+- Renter or owner
+
+**Architecture: filter-based.** Each action gains an optional `requirements` block (e.g., `{ "hasInfant": true }`). The synthesis engine reads `localStorage` profile, derives boolean flags, and filters actions whose requirements aren't all matched. Profile-less reports behave exactly as today.
+
+**UX: inline on the report.** A "Personalize this report" expander above the action plan reveals the form; saving re-renders in place. A "Personalized for: …" pill shows when active. A visible "Forget my household details" button always present.
+
+**Storage: `localStorage`** under `hi-hazards/household-profile-v1`. Privacy line on the form. URL hash explicitly excludes the profile.
+
+**New content:** ~9 new profile-gated actions covering infant kit, pet evacuation, special-needs registry, mobility-equipment plans, no-vehicle evacuation, renters / multi-unit guidance. Plus a per-county special-needs-registry-link list (see open decisions).
+
+### v2.2 — Evacuation routes *(deferred from v2.1)*
 
 Adds walking + driving routes from the user's address to the nearest appropriate evacuation destination. Phase scope:
 
@@ -69,7 +95,7 @@ Adds walking + driving routes from the user's address to the nearest appropriate
 
 Decisions needed: routing provider; how to handle addresses with no clear "primary hazard"; whether to enforce one route per hazard or one consolidated route.
 
-### v2.2 — Address context
+### v2.3 — Address context
 
 Extends the report header with structured facts about the address:
 
@@ -80,20 +106,6 @@ Extends the report header with structured facts about the address:
 - **Parcel context** (if HI county parcel data is licensed): year built, parcel size, zoning.
 
 This phase makes the report feel "I know about my specific home" rather than "I know about this lat/lng."
-
-### v2.3 — Optional household profile
-
-Personalizes the action plan. Client-side storage only (no server, no PII transmission). Profile fields (all optional):
-
-- Number of people, ages, pets, mobility, medical needs, language, vehicle access.
-
-The synthesis engine consumes the profile to:
-- Surface mobility-aware evacuation guidance.
-- Prioritize pet-friendly shelters.
-- Show language-matched action text when available.
-- Adjust kit recommendations (medications, pet supplies, infant supplies).
-
-Implementation note: store in `localStorage` with a clear "Forget me" button. The URL hash never includes profile data.
 
 ### v2.4 — Real-time alerts & incidents
 
@@ -132,13 +144,14 @@ This phase requires the most ongoing operational care — feeds change, services
 
 Things waiting on the user. Each blocks the next phase listed.
 
-1. **Routing provider for v2.1.** OpenRouteService (free tier, key required, decent quality), Mapbox Directions (free tier, key required, best quality), or OSRM (no key, self-hostable, no walking guidance for stairs/paths in HI)? *Blocks v2.1.*
-2. **Hurricane refuge list source.** Where does the canonical list live? HI-EMA county pages? Manual gather + commit? *Blocks v2.1.*
-3. **Should the validator run in CI?** A simple GitHub Actions workflow would refuse PRs that break `content/hazards.json` or `content/actions.json`. *Affects content review workflow.*
-4. **HI-EMA contact and review timeline.** Who's the actual person to send the JSON files to, and when? *Blocks "before public launch" gate.*
-5. **Multi-language scope for v2.0.x.** Schema already supports it. First language? Translation source (community partner vs. paid translator vs. machine + review)? *Decoupled, can ship anytime.*
-6. **What goes on the README's "About" section once content is reviewed?** A short product description with partner logos? *Polish.*
-7. **Domain.** Stay on `koganemochi1-boop.github.io/hawaii-hazards`, or buy `hawaiihazards.org` / similar? *Marketing decision.*
+1. **Special-needs registry links per county.** v2.1 will surface a "Register with [your county's] Special Needs Registry" action. Honolulu, Maui, Hawaiʻi, and Kauaʻi counties each may run their own — need to identify the canonical URL for each. *Blocks v2.1 content draft.*
+2. **Routing provider for v2.2.** OpenRouteService (free tier, key required, decent quality), Mapbox Directions (free tier, key required, best quality), or OSRM (no key, self-hostable, no walking guidance for stairs/paths in HI)? *Blocks v2.2.*
+3. **Hurricane refuge list source.** Where does the canonical list live? HI-EMA county pages? Manual gather + commit? *Blocks v2.2.*
+4. **Should the validator run in CI?** A simple GitHub Actions workflow would refuse PRs that break `content/hazards.json`, `content/actions.json`, or (added in v2.1) the profile schema. *Affects content review workflow.*
+5. **HI-EMA contact and review timeline.** Who's the actual person to send the JSON files to, and when? *Blocks "before public launch" gate.*
+6. **Multi-language scope.** Profile captures preferred language in v2.1, but no translations exist yet. First language? Translation source (community partner vs. paid translator vs. machine + review)? *Decoupled, can ship anytime after v2.1.*
+7. **What goes on the README's "About" section once content is reviewed?** A short product description with partner logos? *Polish.*
+8. **Domain.** Stay on `koganemochi1-boop.github.io/hawaii-hazards`, or buy `hawaiihazards.org` / similar? *Marketing decision.*
 
 ---
 
