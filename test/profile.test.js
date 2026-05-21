@@ -20,6 +20,7 @@ test('loadProfile returns null when nothing is stored', () => {
 });
 
 test('saveProfile then loadProfile round-trips', () => {
+  /** @type {Profile} */
   const p = { householdSize: 4, ages: ['infant', 'adult'], pets: ['dog'] };
   assert.equal(saveProfile(p), true);
   const back = loadProfile();
@@ -29,14 +30,15 @@ test('saveProfile then loadProfile round-trips', () => {
 });
 
 test('saveProfile strips empty/null/undefined/[] fields before storing', () => {
-  saveProfile({
+  // Test cast: we deliberately pass shape-invalid values to verify stripping.
+  saveProfile(/** @type {any} */ ({
     householdSize: 2,
     ages: [],          // empty array → drop
     pets: null,        // null → drop
     mobility: '',      // empty string → drop
     vehicle: undefined,// undefined → drop
     homeType: 'apartment',
-  });
+  }));
   const back = loadProfile();
   assert.equal(back.householdSize, 2);
   assert.equal(back.homeType, 'apartment');
@@ -177,6 +179,7 @@ test('isProfileActive: a profile with at least one meaningful field is active', 
 
 test('isProfileActive: empty arrays and empty strings do not count as meaningful', () => {
   assert.equal(isProfileActive({ ages: [] }), false);
-  assert.equal(isProfileActive({ mobility: '' }), false);
+  // Cast: empty string is shape-invalid but isProfileActive must still treat it as "no value."
+  assert.equal(isProfileActive(/** @type {any} */ ({ mobility: '' })), false);
   assert.equal(isProfileActive({ pets: [], ages: [] }), false);
 });

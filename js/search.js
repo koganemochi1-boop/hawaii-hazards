@@ -1,3 +1,6 @@
+// @ts-nocheck — DOM-typing pass deferred to a follow-up patch.
+// Tracked in ROADMAP polish backlog as "incremental tsc adoption."
+//
 // Nominatim-based geocoder. Free, no key required.
 // Biased to the Hawaiʻi viewbox so "Main St" finds the Hawaiian one.
 

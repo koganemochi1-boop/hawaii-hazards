@@ -22,20 +22,38 @@ const feature = (properties = {}) => ({ type: 'Feature', properties, geometry: W
 const stubLM  = (byHazard) => ({
   getFeaturesIntersecting: async (id) => byHazard[id] || [],
 });
-const makeHazard = (id, zones, opts = {}) => ({
+/** @returns {Hazard} */
+const makeHazard = (id, zones, opts = {}) => /** @type {Hazard} */ ({
   id, displayName: id, shortName: id, spatialKey: id,
   sortHint: opts.sortHint ?? 0,
   zones,
   noMatch: { severity: 'none', label: { en: '' }, oneLiner: { en: '' }, plainExplanation: { en: '' }, actionIds: [] },
   authoritativeSources: [], dataProvenance: {},
 });
-const makeZone = (matchField, matchValue, severity, actionIds = []) => ({
+/** @returns {Zone} */
+const makeZone = (matchField, matchValue, severity, actionIds = []) => /** @type {Zone} */ ({
   match: { field: matchField, equals: matchValue },
   severity,
   label: { en: '' }, oneLiner: { en: '' }, plainExplanation: { en: '' },
   actionIds,
 });
-const makeAction = (id, opts = {}) => ({
+/**
+ * Typed opts so a typo in `requirements` (e.g. `hasInfaant: true`) errors
+ * at the call site rather than silently making an action that never fires.
+ *
+ * @param {string} id
+ * @param {{
+ *   timeHorizon?: TimeHorizon,
+ *   estimatedTime?: string,
+ *   hazardIds?: string[],
+ *   appliesToSeverities?: ApplySeverity[],
+ *   requirements?: Requirements,
+ *   dedupeKey?: string,
+ *   pinned?: boolean,
+ * }} [opts]
+ * @returns {Action}
+ */
+const makeAction = (id, opts = {}) => /** @type {Action} */ ({
   id,
   title: { en: id },
   description: { en: '' },
@@ -48,6 +66,7 @@ const makeAction = (id, opts = {}) => ({
   ...(opts.dedupeKey ? { dedupeKey: opts.dedupeKey } : {}),
   ...(opts.pinned ? { pinned: opts.pinned } : {}),
 });
+/** @type {[number, number]} */
 const ANYWHERE = [0, 0];
 
 // =====================================================================

@@ -1,3 +1,6 @@
+// @ts-nocheck — DOM-typing pass deferred to a follow-up patch.
+// Tracked in ROADMAP polish backlog as "incremental tsc adoption."
+//
 // Entry point for the synthesis report. Reads ?lat&lng&addr from the URL,
 // loads content, runs synthesize(), and mounts the report components.
 // Also boots a small supporting map centered on the address.

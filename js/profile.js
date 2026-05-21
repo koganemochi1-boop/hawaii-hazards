@@ -17,6 +17,8 @@ const SCHEMA_VERSION = 1;
 /**
  * Read the profile from localStorage. Returns `null` if absent, unreadable,
  * or stored under an unrecognized schema version.
+ *
+ * @returns {Profile | null}
  */
 export function loadProfile() {
   if (!hasStorage()) return null;
@@ -39,7 +41,9 @@ export function loadProfile() {
 /**
  * Persist the profile. Strips undefined/null/empty before storing so
  * `loadProfile().fieldName` is reliably either a value or absent.
- * Returns true on success, false if storage failed.
+ *
+ * @param {Profile} profile
+ * @returns {boolean} true on success, false if storage failed
  */
 export function saveProfile(profile) {
   if (!hasStorage()) return false;
@@ -71,9 +75,14 @@ export function clearProfile() {
  * null profile yields all-false flags (i.e., no personalization gates fire).
  *
  * Returned shape is the contract that `content/actions.json` requirements
- * blocks key off of — keep the field names stable.
+ * blocks key off of — keep the field names stable. The field names ARE
+ * the ProfileFlagName enum, type-checked by tsc.
+ *
+ * @param {Profile | null | undefined} profile
+ * @returns {ProfileFlags}
  */
 export function profileFlags(profile) {
+  /** @type {ProfileFlags} */
   const empty = {
     hasInfant: false,
     hasYoungChild: false,
@@ -145,6 +154,9 @@ export function profileFlags(profile) {
  * Check whether a profile is "active" — i.e., the user has supplied at least
  * one meaningful field. Used to decide whether to render the personalized-for
  * pill on the report.
+ *
+ * @param {Profile | null | undefined} profile
+ * @returns {boolean}
  */
 export function isProfileActive(profile) {
   if (!profile) return false;
