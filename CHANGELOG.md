@@ -11,6 +11,55 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ---
 
+## [v2.1.5] — 2026-05-21 *(tagged)*
+
+Refactor `js/report-app.js`. The 309-line orchestrator (with a 158-line
+`bootstrap()` function inside) is now a 235-line thin orchestrator that
+delegates the supporting-map concerns to a new `js/report-map.js` and
+breaks `bootstrap()` into named phase functions.
+
+No user-facing changes. No behavior changes. Pure cleanup made safe by
+the v2.1.1–v2.1.4 test + types foundation.
+
+### Added
+- `js/report-map.js`:
+  - `lightStyle()` — the basemap style
+  - `bootHiddenMap(lngLat)` → `{ map, layerManager, host }` — creates an
+    off-screen MapLibre map, waits for style load, builds the LayerManager
+  - `mountIntoSection(map, layerManager, lngLat, addr, summaries)` —
+    moves the map into the visible `#map-mount`, drops an address marker,
+    enables hit-hazard layers, and wires the layer-toggle expander
+  - `addAddressMarker`, `enableMatchedHazardLayers`, `wireLayerToggles`
+    (still exported for direct use; mountIntoSection calls them)
+
+### Changed
+- `js/report-app.js`:
+  - `bootstrap()` is now a top-level sequence of named phase calls:
+    `readUrlParams` → `inHawaii` check → `renderOutOfHawaii` or
+    `updatePageHeading` + `mountLoadingStatus` + parallel
+    `bootHiddenMap` / `fetchContent` → `runSynthesis` →
+    `renderReport` → `mountIntoSection` → `wireSampleAddresses`.
+  - Map setup, content fetch, and render orchestration each live in
+    their own small function with a JSDoc contract.
+  - Removed inline map-helper functions (lightStyle, addAddressMarker,
+    enableMatchedHazardLayers, wireLayerToggles) — they live in
+    report-map.js now.
+
+### Verified
+- `npm run ci` passes: validate (0 errors, 2 expected warnings) →
+  typecheck with `strictNullChecks: true` (0 errors) → 67/67 tests pass.
+
+### Rationale
+v2.1.1–v2.1.4 added tests, types, and strict-null safety precisely so
+refactors like this one would be safe. The orchestrator was the biggest
+cleanup the codebase wanted, and the type system caught one
+parameter-passing slip during the refactor (the old `enableMatchedHazardLayers`
+had `(map, layerManager, summaries)`; tsc immediately flagged the wrong
+call signature when I copied it into the new module dropping the `map`
+parameter that wasn't being used).
+
+---
+
 ## [v2.1.4] — 2026-05-21 *(tagged)*
 
 Closes the v2 type-safety story. `strictNullChecks` is now ON across
