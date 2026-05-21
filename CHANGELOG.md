@@ -11,6 +11,51 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ---
 
+## [v2.1.3] — 2026-05-21 *(tagged)*
+
+DOM-typing pass. Removes the four `// @ts-nocheck` markers v2.1.2 left on
+the most-DOM-heavy modules, fixes the type errors that surfaced via a
+small typed-shorthand helper module, and brings the engine to
+strict-null-safe (UI files to follow in v2.1.4).
+
+No user-facing changes. Caught one real bug at type-check time —
+`new Error(res.status)` where `res.status` is `number`, fixed to
+`new Error(String(res.status))`.
+
+### Added
+- `js/dom-helpers.js` — tiny typed shorthands over
+  `document.getElementById` / `querySelector`:
+  `$` (HTMLElement), `$input` (HTMLInputElement), `$button`,
+  `$select`, `$textarea`, plus `asElement(EventTarget)`,
+  `asHtml(Element)`, `asInput(Element)` narrowing helpers. The goal:
+  one cast at the boundary rather than every call site repeating
+  `/** @type {HTMLInputElement} */ (document.getElementById('x'))`.
+
+### Changed
+- `js/layers.js`, `js/search.js`, `js/landing-app.js`, `js/report-app.js`
+  — removed `@ts-nocheck`. Each now uses the typed helpers + narrow
+  casts where the DOM API requires a specific subtype. Landing app
+  also gained an explicit "required DOM elements present" guard at
+  the top of the module.
+- `js/profile.js` + `js/url-state.js` — minor null-coalescing fixes
+  (`profile.homeType ?? ''`, `params.get('z') ?? ''`) so the engine
+  passes strict-null. UI files don't yet, hence the temporary revert.
+
+### Deferred to v2.1.4
+- `strictNullChecks` is still `false` in tsconfig. Engine modules
+  (`profile.js`, `synthesis.js`, `risk.js`, `url-state.js`, etc.) ARE
+  strict-null-safe — they have no remaining null errors. The 58
+  outstanding errors are all in DOM-mutating files (landing-app: 20,
+  report-app: 17, search: 9, ui-result: 6, report-components: 3,
+  report-profile-ui: 3) and the right fix is a `mustGet$()` helper that
+  throws on missing elements — better as its own patch.
+
+### Verified
+- `npm run ci` clean: validate (0 errors, 2 expected warnings) →
+  typecheck (0 errors) → 67/67 tests pass.
+
+---
+
 ## [v2.1.2] — 2026-05-21 *(tagged)*
 
 Type-safety release. Adds `tsc --checkJs` in CI to catch the "typo in a

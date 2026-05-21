@@ -1,11 +1,8 @@
-// @ts-nocheck — 4 DOM-typing errors on .dataset access. Pass deferred to
-// a follow-up patch. Tracked in ROADMAP polish backlog as "incremental
-// tsc adoption."
-//
 // Layer manager: loads bundled GeoJSON, queries live ArcGIS REST services,
 // adds/removes MapLibre sources & layers, and handles bbox-based refetching.
 
 import { HAZARDS } from './config.js';
+import { asHtml } from './dom-helpers.js';
 
 const FILL_LAYER = (id) => `${id}-fill`;
 const LINE_LAYER = (id) => `${id}-line`;
@@ -219,14 +216,14 @@ export class LayerManager {
   }
 
   _setLoading(id, loading) {
-    const el = document.querySelector(`[data-layer-loading="${id}"]`);
+    const el = asHtml(document.querySelector(`[data-layer-loading="${id}"]`));
     if (el && !el.dataset.zoomHint) {
       el.textContent = loading ? 'loading…' : '';
     }
   }
 
   _setZoomHint(hazard, needsZoom) {
-    const el = document.querySelector(`[data-layer-loading="${hazard.id}"]`);
+    const el = asHtml(document.querySelector(`[data-layer-loading="${hazard.id}"]`));
     if (!el) return;
     if (needsZoom) {
       el.textContent = `zoom in (≥${hazard.minZoom})`;

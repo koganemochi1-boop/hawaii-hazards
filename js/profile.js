@@ -141,7 +141,7 @@ export function profileFlags(profile) {
     sharedVehicle: profile.vehicle === 'shared',
 
     isSingleFamily:     profile.homeType === 'single_family',
-    isApartmentOrCondo: ['apartment', 'condo', 'multi_unit'].includes(profile.homeType),
+    isApartmentOrCondo: ['apartment', 'condo', 'multi_unit'].includes(profile.homeType ?? ''),
 
     isRenter: profile.tenure === 'renter',
     isOwner:  profile.tenure === 'owner',

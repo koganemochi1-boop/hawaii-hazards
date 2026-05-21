@@ -1,8 +1,7 @@
-// @ts-nocheck — DOM-typing pass deferred to a follow-up patch.
-// Tracked in ROADMAP polish backlog as "incremental tsc adoption."
-//
 // Nominatim-based geocoder. Free, no key required.
 // Biased to the Hawaiʻi viewbox so "Main St" finds the Hawaiian one.
+
+import { $input, $, asElement } from './dom-helpers.js';
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 const VIEWBOX = '-161.0,22.7,-154.4,18.5'; // left,top,right,bottom
@@ -11,8 +10,9 @@ const DEBOUNCE_MS = 350;
 let currentMarker = null;
 
 export function setupGeocoder(map) {
-  const input = document.getElementById('geocoder-input');
-  const results = document.getElementById('geocoder-results');
+  const input = $input('geocoder-input');
+  const results = $('geocoder-results');
+  if (!input || !results) return;
   let timer = null;
 
   input.addEventListener('input', () => {
@@ -27,7 +27,8 @@ export function setupGeocoder(map) {
   });
 
   document.addEventListener('click', (e) => {
-    if (!e.target.closest('.header-actions')) {
+    const target = asElement(e.target);
+    if (target && !target.closest('.header-actions')) {
       results.classList.add('hidden');
     }
   });
@@ -44,7 +45,7 @@ export function setupGeocoder(map) {
       const res = await fetch(url.toString(), {
         headers: { 'Accept-Language': 'en' },
       });
-      if (!res.ok) throw new Error(res.status);
+      if (!res.ok) throw new Error(String(res.status));
       const data = await res.json();
       render(data);
     } catch (e) {
@@ -62,9 +63,10 @@ export function setupGeocoder(map) {
     results.innerHTML = items.map((it, i) =>
       `<div class="item" data-i="${i}">${escapeHtml(it.display_name)}</div>`
     ).join('');
-    results.querySelectorAll('.item').forEach(el => {
+    results.querySelectorAll('.item').forEach(rawEl => {
+      const el = /** @type {HTMLElement} */ (rawEl);
       el.addEventListener('click', () => {
-        const it = items[+el.dataset.i];
+        const it = items[+(el.dataset.i ?? '0')];
         const lng = parseFloat(it.lon), lat = parseFloat(it.lat);
         map.flyTo({ center: [lng, lat], zoom: 14 });
         if (currentMarker) currentMarker.remove();

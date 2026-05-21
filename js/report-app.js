@@ -1,6 +1,3 @@
-// @ts-nocheck — DOM-typing pass deferred to a follow-up patch.
-// Tracked in ROADMAP polish backlog as "incremental tsc adoption."
-//
 // Entry point for the synthesis report. Reads ?lat&lng&addr from the URL,
 // loads content, runs synthesize(), and mounts the report components.
 // Also boots a small supporting map centered on the address.
@@ -254,7 +251,8 @@ function wireLayerToggles(layerManager, summaries) {
     `;
     list.appendChild(cb);
   }
-  list.querySelectorAll('input[data-hazard]').forEach(input => {
+  list.querySelectorAll('input[data-hazard]').forEach(rawInput => {
+    const input = /** @type {HTMLInputElement} */ (rawInput);
     input.addEventListener('change', () => {
       layerManager.toggle(input.dataset.hazard, input.checked);
     });
@@ -275,7 +273,8 @@ function showLanding() {
 }
 
 function wireSampleAddresses() {
-  document.querySelectorAll('#app-footer .sample[data-lng]').forEach(a => {
+  document.querySelectorAll('#app-footer .sample[data-lng]').forEach(rawA => {
+    const a = /** @type {HTMLElement} */ (rawA);
     if (a.dataset.wired) return;
     a.dataset.wired = '1';
     a.addEventListener('click', (e) => {

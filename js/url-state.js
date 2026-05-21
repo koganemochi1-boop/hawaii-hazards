@@ -12,7 +12,7 @@ export function readHashState() {
   if (!h) return null;
   const params = new URLSearchParams(h);
   const layers = (params.get('l') || '').split(',').map(s => s.trim()).filter(s => VALID_IDS.has(s));
-  const z = parseFloat(params.get('z'));
+  const z = parseFloat(params.get('z') ?? '');
   const c = params.get('c');
   let center = null;
   if (c) {

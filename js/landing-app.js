@@ -1,11 +1,8 @@
-// @ts-nocheck — DOM-typing pass deferred to a follow-up patch. tsc errors
-// here are all "Element doesn't have .value/.dataset/.checked" patterns
-// that need narrow type assertions on each getElementById call site.
-// Tracked in ROADMAP polish backlog as "incremental tsc adoption."
-//
 // Landing page: address-first entry into the synthesis report.
 // Typeahead via Nominatim (debounced, viewbox-bounded to Hawaiʻi).
 // On selection or form submit -> navigate to report.html?lat&lng&addr.
+
+import { $, $input, $button, asElement, asHtml } from './dom-helpers.js';
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 const VIEWBOX = '-161.0,22.7,-154.4,18.5';  // left,top,right,bottom
@@ -13,12 +10,19 @@ const DEBOUNCE_MS = 350;
 const MIN_QUERY = 3;
 const HAWAII_BOUNDS = [[-161.0, 18.5], [-154.4, 22.7]];
 
-const input       = document.getElementById('address-input');
-const form        = document.getElementById('address-form');
-const suggestions = document.getElementById('suggestions');
-const submitBtn   = document.getElementById('submit-btn');
-const statusEl    = document.getElementById('form-status');
-const privacy     = document.getElementById('privacy-toggle');
+const input       = $input('address-input');
+const form        = /** @type {HTMLFormElement | null} */ (document.getElementById('address-form'));
+const suggestions = $('suggestions');
+const submitBtn   = $button('submit-btn');
+const statusEl    = $('form-status');
+const privacy     = $('privacy-toggle');
+
+// All UI elements are required for the landing page to function. If any is
+// missing, refuse rather than throwing on null access.
+if (!input || !form || !suggestions || !submitBtn || !statusEl || !privacy) {
+  console.error('[landing] missing required DOM elements; abandoning init');
+  throw new Error('landing page DOM is incomplete');
+}
 
 let typeaheadTimer = null;
 let currentResults = [];
@@ -53,7 +57,8 @@ input.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('click', (e) => {
-  if (!e.target.closest('.address-input-wrap')) hideSuggestions();
+  const target = asElement(e.target);
+  if (!target || !target.closest('.address-input-wrap')) hideSuggestions();
 });
 
 async function fetchSuggestions(q) {
@@ -187,10 +192,11 @@ form.addEventListener('submit', async (e) => {
 
 // -- Sample address cards -------------------------------------------------
 
-document.querySelectorAll('.sample-card[data-lng]').forEach(card => {
+document.querySelectorAll('.sample-card[data-lng]').forEach(rawCard => {
+  const card = /** @type {HTMLElement} */ (rawCard);
   card.addEventListener('click', () => {
-    const lng = parseFloat(card.dataset.lng);
-    const lat = parseFloat(card.dataset.lat);
+    const lng = parseFloat(card.dataset.lng ?? '');
+    const lat = parseFloat(card.dataset.lat ?? '');
     const addr = card.dataset.addr || '';
     goToReport(lng, lat, addr);
   });
