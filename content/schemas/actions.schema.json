@@ -66,6 +66,10 @@
           "uniqueItems": true
         },
         "dedupeKey":             { "type": "string", "description": "Actions sharing a dedupeKey collapse to one row across hazards." },
+        "pinned":                {
+          "type": "boolean",
+          "description": "When true, the action is guaranteed a slot in its time-horizon cap as long as it passes severity + requirements gating. Use sparingly — only for foundational actions every household should see (kit, go bag, alerts)."
+        },
         "requirements":          {
           "type": "object",
           "description": "Optional profile-derived gating. When present, the action ONLY surfaces if every listed flag matches the household profile (true = required, false = required-absent). Actions with no requirements always surface.",

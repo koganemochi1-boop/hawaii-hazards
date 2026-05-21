@@ -9,6 +9,61 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ## [Unreleased]
 
+---
+
+## [v2.1.1] — 2026-05-20 *(tagged)*
+
+Foundation-strengthening release. Adds a real test suite (67 tests across
+3 modules), refactors the validator into a pure library + CLI wrapper, adds
+GitHub Actions CI that blocks regressions on every push and PR, and fixes
+two engine bugs that the new tests caught.
+
+No new user-facing features. The cap-eviction fix is the only behavior
+change residents will notice: foundational actions like *Build a 14-day
+emergency kit* and *Sign up for emergency alerts* no longer get pushed
+out of the plan for households whose profile matches enough faster,
+profile-gated actions.
+
+### Added
+- `test/` directory with `node --test` discovery — zero dependencies.
+  - `test/profile.test.js` — 20 tests covering load/save/clear, schema
+    migration handling, and full flag-derivation matrix.
+  - `test/synthesis.test.js` — 22 tests covering point-in-polygon zone
+    evaluation, severity ordering, overall calculation, dedupe, profile
+    requirements gating, and sort tie-breakers.
+  - `test/synthesis-bugs.test.js` — 5 tests, two of which captured the
+    bugs below before the fixes landed.
+  - `test/validate-content.test.js` — 20 tests covering happy path,
+    every error condition, every warning condition, and a smoke run
+    against the real production content.
+  - `test/helpers/` — fake `localStorage` + minimal `turf` shims so the
+    browser modules load under Node tests.
+- `.github/workflows/ci.yml` — runs `npm run validate` and `npm test` on
+  every push and PR to `main`. Required to pass before merge.
+- Minimal `package.json` with `"type": "module"` and `test` / `validate`
+  scripts. Still zero dependencies.
+
+### Changed
+- `scripts/validate-content.js` refactored into a pure `validate(hazardsDoc,
+  actionsDoc) -> { errors, warnings }` library plus a thin CLI wrapper.
+  Same behavior for the CLI; the library is now testable.
+
+### Fixed
+- **Cap-eviction of foundational actions.** Added a `pinned: true` field
+  on actions, schema-validated. Pinned entries are guaranteed slots in
+  their time-horizon cap (still subject to severity and requirements
+  gating). Marked `sign_up_for_alerts`, `build_go_bag`, and
+  `build_emergency_kit` as pinned.
+- **`matchedRequirements` set only on first dedupe-key encounter.** When
+  multiple actions share a `dedupeKey`, the engine now ORs the
+  has-requirements signal across all merging actions so the
+  personalization affordance is correct regardless of authoring order.
+
+### Tested
+- 67/67 tests pass locally and in CI.
+- Validator: 0 errors on production content (2 expected warnings —
+  `_TODO` marker on registry actions, intentional dedupeKey sharing).
+
 The v2.1.0 milestone is complete (see below). Future work tracked in [ROADMAP.md](ROADMAP.md).
 
 ---

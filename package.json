@@ -1,0 +1,14 @@
+{
+  "name": "hawaii-hazards",
+  "version": "2.1.1",
+  "description": "Hawaiʻi natural hazards & preparedness — synthesis report for residents",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "validate": "node scripts/validate-content.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
