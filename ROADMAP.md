@@ -15,7 +15,7 @@ Update this file when:
 
 ## Snapshot — current state
 
-- **Latest tag:** `v2.1.1` (test foundations + cap-eviction & matchedRequirements fixes).
+- **Latest tag:** `v2.1.2` (JSDoc + `tsc --checkJs` in CI; type-safety for the engine + content schema).
 - **Default branch:** `main`.
 - **Active branch:** none — `v2.1-household-profile` merged to `main`. Next phase will create a new working branch from main HEAD.
 - **Deployed:**
@@ -108,6 +108,8 @@ This phase requires the most ongoing operational care — feeds change, services
 | Convert tsunami GeoJSON (8.8 MB) to PMTiles | medium | First-load improvement |
 | Render volcano boundaries as a line layer | small | Currently downloaded but unused |
 | ~~CI: validator runs on every PR via GitHub Actions~~ | ~~small~~ | ~~Done in v2.1.1 — `.github/workflows/ci.yml` runs validator + unit tests on push/PR.~~ |
+| Incremental tsc adoption: remove `@ts-nocheck` from `report-app.js`, `landing-app.js`, `search.js`, `layers.js` with narrow `HTMLInputElement` / `HTMLButtonElement` assertions at getElementById sites. | small per file | Currently those 4 files have `@ts-nocheck` from v2.1.2; engine + tests + validator are type-checked. |
+| Re-enable `strictNullChecks` in tsconfig once DOM-typed files are clean. | small | Currently off so v2.1.2 could ship the engine types; null guards on DOM lookups are the remaining adoption blocker. |
 | HI state geocoder integration | medium | Better rural BI coverage, keeps PII off OSM Foundation servers |
 | Multi-language content (start with one — Filipino is the largest non-English heritage language in HI) | large (content) | Equity reach |
 | Severity-color tile on landing | small | Hint at the experience before the report loads |

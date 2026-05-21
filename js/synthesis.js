@@ -34,6 +34,13 @@ export const ACTION_LIMITS = {
   this_month: 8,
 };
 
+/**
+ * @param {[number, number]} lngLat
+ * @param {{ getFeaturesIntersecting: (id: string, bbox: number[]) => Promise<any[]> }} layerManager
+ * @param {Content} content
+ * @param {{ profile?: Profile | null }} [options]
+ * @returns {Promise<SynthesisResult>}
+ */
 export async function synthesize(lngLat, layerManager, content, options = {}) {
   if (!Array.isArray(content?.hazards)) {
     throw new Error('synthesize: content.hazards is required');
@@ -64,6 +71,12 @@ export async function synthesize(lngLat, layerManager, content, options = {}) {
 
 // -- Per-hazard evaluation -------------------------------------------------
 
+/**
+ * @param {Hazard} hazard
+ * @param {[number, number]} lngLat
+ * @param {{ getFeaturesIntersecting: (id: string, bbox: number[]) => Promise<any[]> }} layerManager
+ * @returns {Promise<HazardSummary>}
+ */
 async function evaluateHazard(hazard, lngLat, layerManager) {
   const spatialKey = hazard.spatialKey;
   if (!spatialKey) {
@@ -163,7 +176,12 @@ function bySeverityThenSortHint(a, b) {
   return (a.hazard.sortHint ?? 999) - (b.hazard.sortHint ?? 999);
 }
 
+/**
+ * @param {HazardSummary[]} summaries
+ * @returns {Severity}
+ */
 function maxSeverity(summaries) {
+  /** @type {Severity} */
   let best = 'none';
   let bestRank = 0;
   for (const s of summaries) {
@@ -176,6 +194,12 @@ function maxSeverity(summaries) {
 
 // -- Action plan -----------------------------------------------------------
 
+/**
+ * @param {HazardSummary[]} hazardSummaries
+ * @param {Action[]} actions
+ * @param {ProfileFlags} flags
+ * @returns {Plan}
+ */
 function buildActionPlan(hazardSummaries, actions, flags) {
   const actionsById = new Map(actions.map(a => [a.id, a]));
   // dedupeKey -> { action, hazards: Set, maxSeverityRank, matchedRequirements: boolean }
@@ -196,7 +220,9 @@ function buildActionPlan(hazardSummaries, actions, flags) {
       // block, the hazard author already chose the always-on subset, so we
       // skip the severity gate.
       if (!isNoMatch) {
-        if (!action.appliesToSeverities?.includes(summary.severity)) continue;
+        // The cast is safe: this branch is only reached when summary.severity
+        // is one of low/moderate/high (i.e. the zone matched).
+        if (!action.appliesToSeverities?.includes(/** @type {ApplySeverity} */ (summary.severity))) continue;
       }
 
       // Profile requirements gate: every listed flag must match the household
@@ -257,6 +283,9 @@ function buildActionPlan(hazardSummaries, actions, flags) {
  * profile flags. Action with no requirements always passes. Flag set to
  * true means "household must have it"; flag set to false means
  * "household must lack it."
+ *
+ * @param {Action} action
+ * @param {ProfileFlags} flags
  */
 function meetsRequirements(action, flags) {
   const req = action.requirements;

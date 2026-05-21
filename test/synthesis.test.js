@@ -25,6 +25,9 @@ function feature(properties = {}) {
   return { type: 'Feature', properties, geometry: WORLD_POLY };
 }
 
+// Test-fixture builders cast to the real engine types where useful so tsc
+// catches typos in severity / timeHorizon / flag names.
+
 /**
  * Build a stub LayerManager that returns hazardId -> list of features.
  * Pass { hazardA: [feature(...), feature(...)], hazardB: [] }.
@@ -38,8 +41,9 @@ function stubLM(featuresByHazard) {
 /**
  * Minimal hazard shape that satisfies the engine's needs.
  */
+/** @returns {Hazard} */
 function makeHazard(id, zones, opts = {}) {
-  return {
+  return /** @type {Hazard} */ ({
     id,
     displayName: opts.displayName || id,
     shortName: id,
@@ -55,22 +59,35 @@ function makeHazard(id, zones, opts = {}) {
     },
     authoritativeSources: [],
     dataProvenance: {},
-  };
+  });
 }
 
+/** @returns {Zone} */
 function makeZone(matchField, matchValue, severity, actionIds = []) {
-  return {
+  return /** @type {Zone} */ ({
     match: { field: matchField, equals: matchValue },
     severity,
     label: { en: `${matchValue} zone` },
     oneLiner: { en: '' },
     plainExplanation: { en: '' },
     actionIds,
-  };
+  });
 }
 
+/**
+ * @param {string} id
+ * @param {{
+ *   timeHorizon?: TimeHorizon,
+ *   estimatedTime?: string,
+ *   hazardIds?: string[],
+ *   appliesToSeverities?: ApplySeverity[],
+ *   requirements?: Requirements,
+ *   dedupeKey?: string,
+ * }} [opts]
+ * @returns {Action}
+ */
 function makeAction(id, opts = {}) {
-  return {
+  return /** @type {Action} */ ({
     id,
     title: { en: id },
     description: { en: '' },
@@ -81,9 +98,10 @@ function makeAction(id, opts = {}) {
     sources: [{ label: 's', url: 'https://example.org' }],
     ...(opts.requirements ? { requirements: opts.requirements } : {}),
     ...(opts.dedupeKey ? { dedupeKey: opts.dedupeKey } : {}),
-  };
+  });
 }
 
+/** @type {[number, number]} */
 const ANYWHERE = [0, 0];
 
 // -- Per-hazard evaluation ----------------------------------------------

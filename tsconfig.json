@@ -1,0 +1,71 @@
+{
+  "compilerOptions": {
+    // allowJs + checkJs + noEmit makes tsc a pure type checker over .js
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+
+    // Targets: browser ESM (the report + landing) and Node ESM (tests + validator).
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // Strictness: minimal for v2.1.2 — the goal is to catch typos in profile
+    // flag names and content schema fields, not to gate on DOM null-guards yet.
+    // Per-module re-enable of strictNullChecks tracked in ROADMAP.
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "alwaysStrict": true,
+
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+
+    // @types/node for Node built-ins (fs, path, url, process, node:test).
+    // CDN globals (maplibregl, turf, Papa, html2canvas, jspdf, MapboxDraw)
+    // are declared in js/types/ambient.d.ts.
+    "types": ["node"]
+  },
+  "include": [
+    "js/types/**/*.d.ts",
+
+    // v2 engine + content + tests (v2.1.x type-checking scope)
+    "js/profile.js",
+    "js/synthesis.js",
+    "js/config.js",
+    "js/legend.js",
+    "js/popup.js",
+    "js/toast.js",
+    "js/ui-result.js",
+    "js/url-state.js",
+    "js/risk.js",
+    "js/layers.js",
+    "js/search.js",
+    "js/report-app.js",
+    "js/report-components.js",
+    "js/report-profile-ui.js",
+    "js/landing-app.js",
+
+    "scripts/**/*.js",
+    "test/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "dev",
+    "data",
+
+    // v1 viewer (viewer.html). Stable, not part of v2.1.x type-checking scope.
+    "js/app.js",
+    "js/batch-csv.js",
+    "js/draw-analysis.js",
+    "js/export.js",
+    "js/measure.js",
+    "js/places.js",
+    "js/point-query.js"
+  ]
+}

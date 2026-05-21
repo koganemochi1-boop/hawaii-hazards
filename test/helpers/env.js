@@ -12,6 +12,8 @@ import { booleanPointInPolygon as turfBooleanPointInPolygon, point as turfPoint 
 export function makeFakeStorage() {
   const store = new Map();
   return {
+    get length() { return store.size; },
+    key(i) { return [...store.keys()][i] ?? null; },
     getItem(k) { return store.has(k) ? store.get(k) : null; },
     setItem(k, v) { store.set(k, String(v)); },
     removeItem(k) { store.delete(k); },
@@ -22,21 +24,23 @@ export function makeFakeStorage() {
 
 /** Install fake window + localStorage + turf onto globalThis. Idempotent. */
 export function setupEnv() {
-  if (!globalThis.window) {
-    globalThis.window = { localStorage: makeFakeStorage() };
+  const g = /** @type {any} */ (globalThis);
+  if (!g.window) {
+    g.window = { localStorage: makeFakeStorage() };
   }
-  if (!globalThis.turf) {
-    globalThis.turf = {
+  if (!g.turf) {
+    g.turf = {
       point: turfPoint,
       booleanPointInPolygon: turfBooleanPointInPolygon,
     };
   }
-  return globalThis.window.localStorage;
+  return g.window.localStorage;
 }
 
 /** Reset the in-memory localStorage between tests. */
 export function clearStorage() {
-  if (globalThis.window?.localStorage?.clear) {
-    globalThis.window.localStorage.clear();
+  const g = /** @type {any} */ (globalThis);
+  if (g.window?.localStorage?.clear) {
+    g.window.localStorage.clear();
   }
 }

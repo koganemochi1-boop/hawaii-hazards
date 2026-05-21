@@ -6,5 +6,6 @@ test('smoke: test runner works and env helpers load', () => {
   const ls = setupEnv();
   ls.setItem('k', 'v');
   assert.equal(ls.getItem('k'), 'v');
-  assert.equal(typeof globalThis.turf.booleanPointInPolygon, 'function');
+  const g = /** @type {any} */ (globalThis);
+  assert.equal(typeof g.turf.booleanPointInPolygon, 'function');
 });

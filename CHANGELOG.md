@@ -11,6 +11,68 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ---
 
+## [v2.1.2] — 2026-05-21 *(tagged)*
+
+Type-safety release. Adds `tsc --checkJs` in CI to catch the "typo in a
+profile flag name silently breaks an action" class of bug at compile
+time, plus JSDoc `@typedef`s that document the engine and content
+contracts.
+
+No user-facing changes. Two new dev dependencies (`typescript`,
+`@types/node`); production bundle is still vanilla JS with zero runtime
+deps.
+
+### Added
+- `tsconfig.json` — `allowJs + checkJs + noEmit` configured to type-check
+  v2 engine, content, validator, and tests. Scope-limited (v1 viewer
+  files excluded; incremental adoption tracked in ROADMAP polish backlog).
+- `js/types/ambient.d.ts` — ambient declarations for CDN globals
+  (`maplibregl`, `turf`, `Papa`, `html2canvas`, `jspdf`, `MapboxDraw`).
+- `js/types/content.d.ts` — shared `@typedef` blocks for `Profile`,
+  `ProfileFlags`, `ProfileFlagName` (enum), `Content`, `Hazard`, `Zone`,
+  `Action`, `Requirements`, `HazardSummary`, `Plan`, `ActionPlanEntry`,
+  `SynthesisResult`, and the severity / time-horizon enums.
+- `npm run typecheck` script.
+- CI workflow now runs `npm ci` → `validate` → `typecheck` → `test`. The
+  typecheck step gates merges to `main`.
+
+### Changed
+- `js/profile.js` — `loadProfile()`, `saveProfile()`, `profileFlags()`,
+  `isProfileActive()` have full JSDoc signatures referencing the new
+  types. `profileFlags()` return type is `ProfileFlags` — tsc now
+  enforces the contract that the action `requirements` block keys off.
+- `js/synthesis.js` — `synthesize()`, `evaluateHazard()`,
+  `buildActionPlan()`, `meetsRequirements()`, `maxSeverity()` annotated
+  with parameter and return types.
+- Test-fixture builders in `test/synthesis.test.js` and
+  `test/synthesis-bugs.test.js` declare their `opts` parameter as a
+  typed shape so a typo in `requirements: { hasInfaant: true }` is
+  flagged by tsc with `Did you mean 'hasInfant'?` at the call site.
+- `js/landing-app.js` — renamed local `status` variable (clashed with
+  `window.status`) to `statusEl`. Real bug, caught while turning tsc on.
+
+### Deferred (tracked in ROADMAP polish backlog)
+- DOM-typing pass on `js/report-app.js`, `js/landing-app.js`,
+  `js/search.js`, `js/layers.js`. These files have `// @ts-nocheck`
+  pending narrow `HTMLInputElement` / `HTMLButtonElement` assertions
+  on `getElementById` call sites. The pattern is mechanical but
+  high-touch; better as its own patch.
+- `strictNullChecks` is OFF for v2.1.2. Per-module re-enable as DOM
+  files get typed.
+- v1 viewer modules (`app.js`, `batch-csv.js`, `draw-analysis.js`,
+  `export.js`, `measure.js`, `places.js`, `point-query.js`) are
+  excluded from tsc scope. Stable code; revisit if the viewer is
+  revived.
+
+### Verified
+- Local: `npm run ci` runs validate → typecheck → 67 tests, all green.
+- The typo catcher works: introducing `hasInfaant: true` into a test
+  fixture produces `error TS2561: Object literal may only specify
+  known properties, but 'hasInfaant' does not exist in type
+  'Partial<Record<ProfileFlagName, boolean>>'. Did you mean 'hasInfant'?`
+
+---
+
 ## [v2.1.1] — 2026-05-20 *(tagged)*
 
 Foundation-strengthening release. Adds a real test suite (67 tests across
