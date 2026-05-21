@@ -15,7 +15,7 @@ Update this file when:
 
 ## Snapshot — current state
 
-- **Latest tag:** `v2.1.3` (DOM-typing pass — `@ts-nocheck` removed from `layers.js`, `search.js`, `landing-app.js`, `report-app.js`; engine is strict-null-safe).
+- **Latest tag:** `v2.1.4` (`strictNullChecks: true` across all v2 modules; `mustGet$*` helpers; the v2 type-safety story is complete).
 - **Default branch:** `main`.
 - **Active branch:** none — `v2.1-household-profile` merged to `main`. Next phase will create a new working branch from main HEAD.
 - **Deployed:**
@@ -109,7 +109,7 @@ This phase requires the most ongoing operational care — feeds change, services
 | Render volcano boundaries as a line layer | small | Currently downloaded but unused |
 | ~~CI: validator runs on every PR via GitHub Actions~~ | ~~small~~ | ~~Done in v2.1.1 — `.github/workflows/ci.yml` runs validator + unit tests on push/PR.~~ |
 | ~~Incremental tsc adoption: remove `@ts-nocheck` from `report-app.js`, `landing-app.js`, `search.js`, `layers.js`~~ | ~~small per file~~ | ~~Done in v2.1.3 — `js/dom-helpers.js` adds typed shorthands; all 4 files now type-check.~~ |
-| Re-enable `strictNullChecks`: introduce a `mustGet$()` helper that throws on missing DOM elements, then turn the flag on. Engine is already strict-null-safe; ~58 errors remain in `landing-app.js` (20), `report-app.js` (17), `search.js` (9), `ui-result.js` (6), `report-components.js` (3), `report-profile-ui.js` (3). | medium | Catches "Object is possibly null" bugs across the UI layer. Next infrastructure patch. |
+| ~~Re-enable `strictNullChecks`: introduce a `mustGet$()` helper that throws on missing DOM elements, then turn the flag on.~~ | ~~medium~~ | ~~Done in v2.1.4 — all v2 modules now type-check under `strictNullChecks: true`.~~ |
 | HI state geocoder integration | medium | Better rural BI coverage, keeps PII off OSM Foundation servers |
 | Multi-language content (start with one — Filipino is the largest non-English heritage language in HI) | large (content) | Equity reach |
 | Severity-color tile on landing | small | Hint at the experience before the report loads |

@@ -24,6 +24,7 @@ test('saveProfile then loadProfile round-trips', () => {
   const p = { householdSize: 4, ages: ['infant', 'adult'], pets: ['dog'] };
   assert.equal(saveProfile(p), true);
   const back = loadProfile();
+  assert.ok(back, 'expected profile after save');
   assert.equal(back.householdSize, 4);
   assert.deepEqual(back.ages, ['infant', 'adult']);
   assert.deepEqual(back.pets, ['dog']);
@@ -40,6 +41,7 @@ test('saveProfile strips empty/null/undefined/[] fields before storing', () => {
     homeType: 'apartment',
   }));
   const back = loadProfile();
+  assert.ok(back, 'expected profile after save');
   assert.equal(back.householdSize, 2);
   assert.equal(back.homeType, 'apartment');
   assert.equal('ages' in back, false);
@@ -50,7 +52,9 @@ test('saveProfile strips empty/null/undefined/[] fields before storing', () => {
 
 test('saveProfile stamps _schemaVersion: 1', () => {
   saveProfile({ householdSize: 3 });
-  assert.equal(loadProfile()._schemaVersion, 1);
+  const back = loadProfile();
+  assert.ok(back);
+  assert.equal(back._schemaVersion, 1);
 });
 
 test('clearProfile removes the saved profile', () => {

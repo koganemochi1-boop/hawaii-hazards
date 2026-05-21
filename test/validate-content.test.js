@@ -32,6 +32,13 @@ function goodAction(overrides = {}) {
   };
 }
 
+/**
+ * Returns a builder-typed hazard. `any` is used so tests can mutate
+ * deeply (assigning to zones[0].severity, deleting fields) — those
+ * mutations are exactly what we're verifying the validator catches.
+ *
+ * @returns {any}
+ */
 function goodHazard(overrides = {}) {
   return {
     id: 'hA',
@@ -82,13 +89,13 @@ test('validate: one good hazard + one good action passes clean', () => {
 // -- Action-level errors ------------------------------------------------
 
 test('validate: action missing id reported as error', () => {
-  const a = goodAction(); delete a.id;
+  /** @type {any} */ const a = goodAction(); delete a.id;
   const { errors } = validate({ hazards: [] }, { actions: [a] });
   assert.ok(errors.some(m => /missing id/i.test(m)), errors.join('\n'));
 });
 
 test('validate: action missing title.en reported', () => {
-  const a = goodAction(); delete a.title;
+  /** @type {any} */ const a = goodAction(); delete a.title;
   const { errors } = validate({ hazards: [] }, { actions: [a] });
   assert.ok(errors.some(m => /title.en/.test(m)));
 });

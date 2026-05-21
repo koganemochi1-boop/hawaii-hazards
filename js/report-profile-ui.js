@@ -180,19 +180,23 @@ export function renderProfileSection(currentProfile, onSave, onClear) {
   `;
 
   const fieldsetsEl = root.querySelector('.profile-fieldsets');
+  if (!fieldsetsEl) throw new Error('profile section template missing .profile-fieldsets');
   for (const group of FIELD_LAYOUT) {
     fieldsetsEl.appendChild(buildFieldset(group, currentProfile || {}));
   }
 
   // -- Wire submit / forget ------------------------------------------------
-  const form = root.querySelector('.profile-form');
+  const form = /** @type {HTMLFormElement | null} */ (root.querySelector('.profile-form'));
+  if (!form) throw new Error('profile section template missing .profile-form');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const profile = collect(form);
     onSave?.(profile);
   });
 
-  root.querySelector('[data-action="forget"]').addEventListener('click', () => {
+  const forgetBtn = root.querySelector('[data-action="forget"]');
+  if (!forgetBtn) throw new Error('profile section template missing [data-action="forget"]');
+  forgetBtn.addEventListener('click', () => {
     if (!isActive && !hasAnyValue(form)) {
       // Nothing to forget; clear visible inputs and that's it.
       resetForm(form);
