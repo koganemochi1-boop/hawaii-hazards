@@ -15,7 +15,7 @@ Update this file when:
 
 ## Snapshot — current state
 
-- **Latest tag:** `v2.1.0` (household profile).
+- **Latest tag:** `v2.1.1` (test foundations + cap-eviction & matchedRequirements fixes).
 - **Default branch:** `main`.
 - **Active branch:** none — `v2.1-household-profile` merged to `main`. Next phase will create a new working branch from main HEAD.
 - **Deployed:**
@@ -107,7 +107,7 @@ This phase requires the most ongoing operational care — feeds change, services
 | Switch live ArcGIS to point-geometry queries | small | Faster synthesize() (~2× expected) |
 | Convert tsunami GeoJSON (8.8 MB) to PMTiles | medium | First-load improvement |
 | Render volcano boundaries as a line layer | small | Currently downloaded but unused |
-| CI: validator runs on every PR via GitHub Actions | small | Catches content schema regressions before merge |
+| ~~CI: validator runs on every PR via GitHub Actions~~ | ~~small~~ | ~~Done in v2.1.1 — `.github/workflows/ci.yml` runs validator + unit tests on push/PR.~~ |
 | HI state geocoder integration | medium | Better rural BI coverage, keeps PII off OSM Foundation servers |
 | Multi-language content (start with one — Filipino is the largest non-English heritage language in HI) | large (content) | Equity reach |
 | Severity-color tile on landing | small | Hint at the experience before the report loads |
@@ -122,11 +122,10 @@ Things waiting on the user. Each blocks the next phase listed.
 1. **Special-needs registry links per county.** v2.1 will surface a "Register with [your county's] Special Needs Registry" action. Honolulu, Maui, Hawaiʻi, and Kauaʻi counties each may run their own — need to identify the canonical URL for each. *Blocks v2.1 content draft.*
 2. **Routing provider for v2.2.** OpenRouteService (free tier, key required, decent quality), Mapbox Directions (free tier, key required, best quality), or OSRM (no key, self-hostable, no walking guidance for stairs/paths in HI)? *Blocks v2.2.*
 3. **Hurricane refuge list source.** Where does the canonical list live? HI-EMA county pages? Manual gather + commit? *Blocks v2.2.*
-4. **Should the validator run in CI?** A simple GitHub Actions workflow would refuse PRs that break `content/hazards.json`, `content/actions.json`, or (added in v2.1) the profile schema. *Affects content review workflow.*
-5. **HI-EMA contact and review timeline.** Who's the actual person to send the JSON files to, and when? *Blocks "before public launch" gate.*
-6. **Multi-language scope.** Profile captures preferred language in v2.1, but no translations exist yet. First language? Translation source (community partner vs. paid translator vs. machine + review)? *Decoupled, can ship anytime after v2.1.*
-7. **What goes on the README's "About" section once content is reviewed?** A short product description with partner logos? *Polish.*
-8. **Domain.** Stay on `koganemochi1-boop.github.io/hawaii-hazards`, or buy `hawaiihazards.org` / similar? *Marketing decision.*
+4. **HI-EMA contact and review timeline.** Who's the actual person to send the JSON files to, and when? *Blocks "before public launch" gate.*
+5. **Multi-language scope.** Profile captures preferred language in v2.1, but no translations exist yet. First language? Translation source (community partner vs. paid translator vs. machine + review)? *Decoupled, can ship anytime after v2.1.*
+6. **What goes on the README's "About" section once content is reviewed?** A short product description with partner logos? *Polish.*
+7. **Domain.** Stay on `koganemochi1-boop.github.io/hawaii-hazards`, or buy `hawaiihazards.org` / similar? *Marketing decision.*
 
 ---
 

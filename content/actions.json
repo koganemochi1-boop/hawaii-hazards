@@ -15,6 +15,7 @@
       "hazardIds": ["tsunami", "flood", "wildfire", "coastal", "lava"],
       "appliesToSeverities": ["low", "moderate", "high"],
       "dedupeKey": "alert_signup",
+      "pinned": true,
       "sources": [
         { "label": "HI-EMA emergency alerts",
           "url": "https://dod.hawaii.gov/hiema/" },
@@ -79,6 +80,7 @@
       "hazardIds": ["tsunami", "coastal", "wildfire", "lava", "flood"],
       "appliesToSeverities": ["high"],
       "dedupeKey": "go_bag",
+      "pinned": true,
       "sources": [
         { "label": "Ready.gov — Build a Kit",
           "url": "https://www.ready.gov/kit" },
@@ -96,6 +98,7 @@
       "hazardIds": ["tsunami", "flood", "coastal", "wildfire", "lava"],
       "appliesToSeverities": ["low", "moderate", "high"],
       "dedupeKey": "emergency_kit",
+      "pinned": true,
       "sources": [
         { "label": "HI-EMA — 14 Days Ready",
           "url": "https://dod.hawaii.gov/hiema/public-resources/14-days-ready/" }

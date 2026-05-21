@@ -207,16 +207,20 @@ function buildActionPlan(hazardSummaries, actions, flags) {
       const key = action.dedupeKey || action.id;
       const entry = merged.get(key);
       const rank = SEVERITY_RANK[summary.severity] ?? 0;
+      const hasRequirements = action.requirements != null && Object.keys(action.requirements).length > 0;
       if (!entry) {
         merged.set(key, {
           action,
           hazards: new Set([summary.hazardId]),
           maxSeverityRank: rank,
-          matchedRequirements: action.requirements != null && Object.keys(action.requirements).length > 0,
+          matchedRequirements: hasRequirements,
         });
       } else {
         entry.hazards.add(summary.hazardId);
         if (rank > entry.maxSeverityRank) entry.maxSeverityRank = rank;
+        // Bug fix: matchedRequirements must reflect that ANY merged action
+        // had non-empty requirements that matched, not just the first one.
+        if (hasRequirements) entry.matchedRequirements = true;
       }
     }
   }
@@ -230,7 +234,19 @@ function buildActionPlan(hazardSummaries, actions, flags) {
   for (const horizon of Object.keys(plan)) {
     plan[horizon].sort(byPlanRank);
     const cap = ACTION_LIMITS[horizon];
-    if (cap && plan[horizon].length > cap) plan[horizon] = plan[horizon].slice(0, cap);
+    if (!cap || plan[horizon].length <= cap) continue;
+
+    // Bug fix: actions marked `pinned: true` are guaranteed slots in the cap.
+    // Without this, foundational actions like "build emergency kit" can be
+    // pushed out of the plan by a household whose profile matches enough
+    // faster, profile-gated actions.
+    //
+    // Pinned still respects severity and requirements gating upstream — this
+    // only protects against cap-eviction.
+    const pinned  = plan[horizon].filter(e => e.action.pinned).slice(0, cap);
+    const remain  = cap - pinned.length;
+    const regular = plan[horizon].filter(e => !e.action.pinned).slice(0, Math.max(0, remain));
+    plan[horizon] = [...pinned, ...regular].sort(byPlanRank);
   }
 
   return plan;
