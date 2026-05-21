@@ -30,7 +30,7 @@ export function renderAddressBar({ addr, lng, lat, onChangeAddress }) {
     <button type="button" class="change">Change address</button>
   `;
   if (onChangeAddress) {
-    el.querySelector('.change').addEventListener('click', onChangeAddress);
+    el.querySelector('.change')?.addEventListener('click', onChangeAddress);
   }
   return el;
 }
@@ -253,8 +253,8 @@ export function renderReportActions({ onPrint, onShare }) {
     <button class="btn primary" data-act="print">Print / Save as PDF</button>
     <button class="btn" data-act="share">Copy link</button>
   `;
-  el.querySelector('[data-act="print"]').addEventListener('click', onPrint);
-  el.querySelector('[data-act="share"]').addEventListener('click', onShare);
+  el.querySelector('[data-act="print"]')?.addEventListener('click', onPrint);
+  el.querySelector('[data-act="share"]')?.addEventListener('click', onShare);
   return el;
 }
 

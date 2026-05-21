@@ -11,6 +11,66 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ---
 
+## [v2.1.4] — 2026-05-21 *(tagged)*
+
+Closes the v2 type-safety story. `strictNullChecks` is now ON across
+every v2 module. The "Object is possibly null" class of bug — accessing
+a DOM element that might not exist — can no longer reach `main`.
+
+No user-facing changes. Caught one real-world correctness improvement:
+when required DOM elements are absent, the page now fails fast at init
+with a clear error message instead of silently mis-wiring or crashing
+deep in a click handler.
+
+### Added
+- `mustGet$()`, `mustGet$input()`, `mustGet$button()`, `mustGet$form()`,
+  `mustHtml()` in `js/dom-helpers.js`. Each throws a descriptive error
+  if the element is missing or the wrong tag, and returns a non-null
+  typed reference. Lets callers use elements under `strictNullChecks`
+  without scattering `?.` or null guards through downstream code.
+
+### Changed
+- `tsconfig.json`: `strictNullChecks: true`.
+- `js/landing-app.js`: swapped nullable lookups for `mustGet$*` at the
+  top of the module. Removed the manual `if (!input || !form || …)`
+  guard — `mustGet$*` now handles that uniformly.
+- `js/report-app.js`: `reportEl = mustGet$('report')`,
+  `params.get(...) ?? ''` for URL parsing, typed Promise wrapper for
+  the map.once('load') wait.
+- `js/search.js`: `mustGet$input` + `mustGet$` at the top of
+  `setupGeocoder` (the v1 geocoder is only invoked from the viewer
+  page where its elements are required to exist).
+- `js/ui-result.js`: `mustGet$` for the three result-panel elements;
+  `wireCloseButtons` now null-guards the `data-close` attribute.
+- `js/report-components.js`: optional-chaining (`?.`) on
+  `querySelector(...).addEventListener` where the element is
+  template-internal but conceptually optional.
+- `js/report-profile-ui.js`: explicit "template missing" throws on the
+  internal `.profile-fieldsets`, `.profile-form`, and
+  `[data-action="forget"]` selectors.
+- `test/profile.test.js`: `assert.ok(back)` after `loadProfile()` so
+  later property access type-checks. `test/validate-content.test.js`:
+  `goodHazard()` returns `any` (intentional — tests mutate it to
+  deliberately invalid shapes to verify validator catches them).
+
+### Verified
+- `npm run ci` clean: validate (0 errors, 2 expected warnings) →
+  typecheck with `strictNullChecks: true` (0 errors) → 67/67 tests pass.
+
+### What this closes
+With v2.1.4, the v2 type-safety story is complete:
+- v2.1.1 added a 67-test suite and CI gate.
+- v2.1.2 added `tsc --checkJs` over the engine + content + tests +
+  validator; caught the "typo in a flag name" bug class.
+- v2.1.3 removed `@ts-nocheck` from the four DOM-heavy modules via a
+  typed-shorthand helper module.
+- v2.1.4 (this) enables `strictNullChecks` across the same scope.
+
+The v1 viewer modules (`app.js`, `batch-csv.js`, etc.) remain excluded
+from tsc — they're stable and not part of v2.
+
+---
+
 ## [v2.1.3] — 2026-05-21 *(tagged)*
 
 DOM-typing pass. Removes the four `// @ts-nocheck` markers v2.1.2 left on

@@ -1,7 +1,7 @@
 // Nominatim-based geocoder. Free, no key required.
 // Biased to the Hawaiʻi viewbox so "Main St" finds the Hawaiian one.
 
-import { $input, $, asElement } from './dom-helpers.js';
+import { mustGet$input, mustGet$, asElement } from './dom-helpers.js';
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 const VIEWBOX = '-161.0,22.7,-154.4,18.5'; // left,top,right,bottom
@@ -10,9 +10,8 @@ const DEBOUNCE_MS = 350;
 let currentMarker = null;
 
 export function setupGeocoder(map) {
-  const input = $input('geocoder-input');
-  const results = $('geocoder-results');
-  if (!input || !results) return;
+  const input = mustGet$input('geocoder-input');
+  const results = mustGet$('geocoder-results');
   let timer = null;
 
   input.addEventListener('input', () => {

@@ -16,7 +16,7 @@
     // Per-module re-enable of strictNullChecks tracked in ROADMAP.
     "strict": false,
     "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
     "alwaysStrict": true,

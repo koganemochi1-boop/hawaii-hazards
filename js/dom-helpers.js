@@ -81,3 +81,70 @@ export function asHtml(e) {
 export function asInput(e) {
   return e instanceof HTMLInputElement ? e : null;
 }
+
+// -- "Must get" variants -------------------------------------------------
+//
+// Throw if the element is missing. Use when the element is structurally
+// required — the program can't function without it, so failing fast at
+// init time is better than dereferencing `null` later.
+//
+// All return non-null typed values, which lets callers use them under
+// strictNullChecks without `?.` clutter.
+
+/**
+ * @param {string} id
+ * @returns {HTMLElement}
+ */
+export function mustGet$(id) {
+  const el = document.getElementById(id);
+  if (!el) throw new Error(`Required element #${id} not found in DOM`);
+  return el;
+}
+
+/**
+ * @param {string} id
+ * @returns {HTMLInputElement}
+ */
+export function mustGet$input(id) {
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLInputElement)) {
+    throw new Error(`Required input #${id} not found (or not an <input>)`);
+  }
+  return el;
+}
+
+/**
+ * @param {string} id
+ * @returns {HTMLButtonElement}
+ */
+export function mustGet$button(id) {
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLButtonElement)) {
+    throw new Error(`Required button #${id} not found (or not a <button>)`);
+  }
+  return el;
+}
+
+/**
+ * @param {string} id
+ * @returns {HTMLFormElement}
+ */
+export function mustGet$form(id) {
+  const el = document.getElementById(id);
+  if (!(el instanceof HTMLFormElement)) {
+    throw new Error(`Required form #${id} not found (or not a <form>)`);
+  }
+  return el;
+}
+
+/**
+ * Narrow an Element to HTMLElement, throwing if it isn't one. Used when
+ * iterating querySelectorAll results that we know to be HTMLElements (e.g.,
+ * .dataset access is needed downstream).
+ * @param {Element | null | undefined} e
+ * @returns {HTMLElement}
+ */
+export function mustHtml(e) {
+  if (!(e instanceof HTMLElement)) throw new Error('Expected HTMLElement');
+  return e;
+}

@@ -15,10 +15,11 @@ import {
   renderInvalidLocation,
 } from './report-components.js';
 import { renderProfileSection } from './report-profile-ui.js';
+import { mustGet$ } from './dom-helpers.js';
 
 const HAWAII_BOUNDS = [[-161.0, 18.5], [-154.4, 22.7]];
 
-const reportEl = document.getElementById('report');
+const reportEl = mustGet$('report');
 
 function resetReport() {
   // Clear out the report area but keep the H1 (for accessibility).
@@ -37,8 +38,8 @@ bootstrap().catch(err => {
 
 async function bootstrap() {
   const params = new URLSearchParams(window.location.search);
-  const lng = parseFloat(params.get('lng'));
-  const lat = parseFloat(params.get('lat'));
+  const lng = parseFloat(params.get('lng') ?? '');
+  const lat = parseFloat(params.get('lat') ?? '');
   const addr = params.get('addr');
 
   if (!Number.isFinite(lng) || !Number.isFinite(lat)) {
@@ -91,7 +92,8 @@ async function bootstrap() {
   // Wait for the map style to load. Handle the case where map.loaded()
   // is already true by the time we get here (synchronous style load).
   if (!map.loaded()) {
-    await new Promise((resolve, reject) => {
+    /** @type {Promise<void>} */
+    const waitForLoad = new Promise((resolve, reject) => {
       let settled = false;
       const onLoad = () => { settled = true; resolve(); };
       const onError = (e) => { if (!settled) reject(e?.error || new Error('Map style failed')); };
@@ -101,6 +103,7 @@ async function bootstrap() {
       // listener registration, time out and proceed.
       setTimeout(() => { if (!settled) { settled = true; resolve(); } }, 5000);
     });
+    await waitForLoad;
   }
 
   const layerManager = new LayerManager(map);
