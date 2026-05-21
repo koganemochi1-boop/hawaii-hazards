@@ -15,7 +15,7 @@ Update this file when:
 
 ## Snapshot — current state
 
-- **Latest tag:** `v2.1.4` (`strictNullChecks: true` across all v2 modules; `mustGet$*` helpers; the v2 type-safety story is complete).
+- **Latest tag:** `v2.1.5` (refactor: split `report-app.js`'s 309-line orchestrator into a thin top-level + named phase functions + a new `report-map.js`).
 - **Default branch:** `main`.
 - **Active branch:** none — `v2.1-household-profile` merged to `main`. Next phase will create a new working branch from main HEAD.
 - **Deployed:**

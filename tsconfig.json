@@ -49,6 +49,7 @@
     "js/search.js",
     "js/report-app.js",
     "js/report-components.js",
+    "js/report-map.js",
     "js/report-profile-ui.js",
     "js/landing-app.js",
 
