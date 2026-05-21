@@ -38,6 +38,7 @@
     "js/profile.js",
     "js/synthesis.js",
     "js/config.js",
+    "js/dom-helpers.js",
     "js/legend.js",
     "js/popup.js",
     "js/toast.js",
