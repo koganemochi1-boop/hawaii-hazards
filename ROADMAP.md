@@ -15,7 +15,7 @@ Update this file when:
 
 ## Snapshot — current state
 
-- **Latest tag:** `v2.1.5` (refactor: split `report-app.js`'s 309-line orchestrator into a thin top-level + named phase functions + a new `report-map.js`).
+- **Latest tag:** `v2.1.6` (`npm run refresh-data` — automates the bundled-GeoJSON refresh that was a documented curl block).
 - **Default branch:** `main`.
 - **Active branch:** none — `v2.1-household-profile` merged to `main`. Next phase will create a new working branch from main HEAD.
 - **Deployed:**

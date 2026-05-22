@@ -11,6 +11,51 @@ See [CLAUDE.md](CLAUDE.md) for the full versioning policy.
 
 ---
 
+## [v2.1.6] — 2026-05-22 *(tagged)*
+
+Adds `npm run refresh-data` — a Node script that re-downloads the three
+bundled GeoJSON layers from the State of Hawaiʻi GIS service, validates
+the responses, writes the files atomically, and stamps today's date as
+`dataProvenance.lastDownloaded` on the matching hazards in
+`content/hazards.json`. Replaces the three-line manual `curl` block that
+was in CLAUDE.md.
+
+### Added
+- `scripts/refresh-bundled-data.js`:
+  - Refreshes tsunami evac (MapServer/11), lava zones (MapServer/3),
+    volcano boundaries (MapServer/9).
+  - `--dry-run` previews deltas (feature count + size) without writing.
+  - `--source=<id>` (e.g. `tsunami`, `lava`, `volcano-boundaries`)
+    refreshes a single source.
+  - Validates each response is a `FeatureCollection` with at least one
+    feature; rejects ArcGIS error payloads before they overwrite the
+    file.
+  - Atomic write: stages to `.tmp`, renames on success. If a rename
+    fails the existing file is untouched.
+  - Updates `dataProvenance.lastDownloaded` to today's ISO date on each
+    refreshed hazard in `content/hazards.json`.
+  - Reports per-source deltas (`113 features (no change), 8.67 MB (+107.8 KB)`).
+- `npm run refresh-data` script in `package.json`.
+
+### Changed
+- `CLAUDE.md` "Refreshing bundled data" section now points at the npm
+  script instead of three `curl` commands.
+- First run of the refresh script normalized the bundled GeoJSON files
+  to JS's `JSON.stringify` representation (no feature changes; ~1%
+  size deltas from whitespace/precision differences vs. the original
+  `curl` downloads). Subsequent refreshes against unchanged upstream
+  will produce byte-identical files.
+- `dataProvenance.lastDownloaded` updated to `2026-05-22` for tsunami
+  and lava hazards.
+
+### Verified
+- `npm run refresh-data -- --dry-run` reports the expected feature
+  counts (tsunami: 113, lava: 18, volcano: 589).
+- First real run completed without errors; `npm run ci` clean
+  afterwards (validate + typecheck + 67 tests).
+
+---
+
 ## [v2.1.5] — 2026-05-21 *(tagged)*
 
 Refactor `js/report-app.js`. The 309-line orchestrator (with a 158-line

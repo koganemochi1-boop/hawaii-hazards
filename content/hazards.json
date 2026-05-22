@@ -144,7 +144,7 @@
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/11",
         "spatialAttribution": "Hawaiʻi Statewide GIS Program",
-        "lastDownloaded": "2026-05-13",
+        "lastDownloaded": "2026-05-22",
         "refreshCadence": "annual"
       }
     },
@@ -1132,7 +1132,7 @@
       "dataProvenance": {
         "service": "Hawaiʻi Statewide GIS — Hazards/MapServer/3",
         "spatialAttribution": "USGS Hawaiian Volcano Observatory",
-        "lastDownloaded": "2026-05-13",
+        "lastDownloaded": "2026-05-22",
         "refreshCadence": "rare — zones revised when USGS publishes updates"
       }
     }

@@ -1,6 +1,6 @@
 {
   "name": "hawaii-hazards",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Hawaiʻi natural hazards & preparedness — synthesis report for residents",
   "private": true,
   "type": "module",
@@ -8,6 +8,7 @@
     "test": "node --test test/*.test.js",
     "validate": "node scripts/validate-content.js",
     "typecheck": "tsc",
+    "refresh-data": "node scripts/refresh-bundled-data.js",
     "ci": "npm run validate && npm run typecheck && npm test"
   },
   "engines": {

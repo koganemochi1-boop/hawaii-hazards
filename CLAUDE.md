@@ -159,10 +159,18 @@ CSV, and composite scoring all read from this config.
 ## Refreshing bundled data
 
 ```bash
-curl "https://geodata.hawaii.gov/arcgis/rest/services/Hazards/MapServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson"  -o data/lava-zones.geojson
-curl "https://geodata.hawaii.gov/arcgis/rest/services/Hazards/MapServer/11/query?where=1%3D1&outFields=*&outSR=4326&f=geojson" -o data/tsunami-evac.geojson
-curl "https://geodata.hawaii.gov/arcgis/rest/services/Hazards/MapServer/9/query?where=1%3D1&outFields=*&outSR=4326&f=geojson"  -o data/volcano-boundaries.geojson
+npm run refresh-data                   # all three sources
+npm run refresh-data -- --dry-run      # preview deltas without writing
+npm run refresh-data -- --source=lava  # just one source
 ```
+
+`scripts/refresh-bundled-data.js` queries the State of Hawaiʻi GIS
+service for each bundled layer (tsunami evac, lava zones, volcano
+boundaries), validates the response is a non-empty FeatureCollection,
+writes the files atomically (.tmp → rename), and stamps today's date
+into `content/hazards.json` under each hazard's
+`dataProvenance.lastDownloaded`. Run `npm run validate && npm test`
+after refreshing to confirm nothing schema-broke upstream.
 
 ## Known wrinkles
 
